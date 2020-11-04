@@ -1,9 +1,11 @@
 import React from 'react';
+import CardListItem from './components/CardListItem';
 
 class App2 extends React.Component {
   state = {
     currentSet: 'znr',
     cardsList: [],
+    raritySelector: 'rare',
   };
 
   getSetData = async (set) => {
@@ -30,7 +32,7 @@ class App2 extends React.Component {
                   !cardsList.some((element) => element.name === item.name)
                 )
                   cardsList.push(item);
-                //localStorage.setItem(set, JSON.stringify(cardsList));
+                // localStorage.setItem(set, JSON.stringify(cardsList));
               });
             }
           });
@@ -47,8 +49,9 @@ class App2 extends React.Component {
   getLocalSetData = (set) => {
     if (localStorage.getItem(set)) {
       const cardsList = JSON.parse(localStorage.getItem(set));
-      this.setState({ cardsList });
       console.log('loading local set data');
+      this.setState({ cardsList });
+      console.log('local set data loaded');
     } else {
       this.getSetData(set);
       console.log('fetching set data');
@@ -86,8 +89,8 @@ class App2 extends React.Component {
         </select>
         {this.state.cardsList.map((item) => {
           const { id, name, rarity } = item;
-          if (rarity === 'rare') {
-            return <p key={id}>{name}</p>;
+          if (rarity === this.state.raritySelector) {
+            return <CardListItem key={id} id={id} name={name} />;
           }
         })}
       </div>
