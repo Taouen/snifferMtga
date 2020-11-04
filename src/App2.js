@@ -32,29 +32,24 @@ class App2 extends React.Component {
                   !cardsList.some((element) => element.name === item.name)
                 )
                   cardsList.push(item);
-                // localStorage.setItem(set, JSON.stringify(cardsList));
+                localStorage.setItem(set, JSON.stringify(cardsList));
               });
             }
           });
         });
+        this.setState({ cardsList });
       };
 
       getCards(data.search_uri);
-      console.log('successfully fetched set data');
-      this.setState({ cardsList });
-      console.log('Set state to current cardsList');
     });
   };
 
   getLocalSetData = (set) => {
     if (localStorage.getItem(set)) {
       const cardsList = JSON.parse(localStorage.getItem(set));
-      console.log('loading local set data');
       this.setState({ cardsList });
-      console.log('local set data loaded');
     } else {
       this.getSetData(set);
-      console.log('fetching set data');
     }
   };
 
@@ -62,11 +57,9 @@ class App2 extends React.Component {
     const currentSet = event.target.value;
     this.getLocalSetData(currentSet);
     this.setState({ currentSet });
-    console.log('set changed');
   };
 
   componentDidMount = () => {
-    console.log('component mounted');
     this.getLocalSetData(this.state.currentSet);
   };
 
