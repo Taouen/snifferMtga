@@ -4,7 +4,7 @@ import CardListItem from './components/CardListItem';
 /* To DO
  
   - import set symbol
-  - enter quantity (min 0, max 4)
+  
   - enter packs owned
   -  
 */
@@ -92,12 +92,6 @@ class App2 extends React.Component {
     this.setState({ raritySelector });
   };
 
-  // Working on writing two formulas, one to select the card to update, and one to update the collected value for the card, then call them both within a single function to pass to the component.
-
-  flagForUpdate = (name) => {
-    const { rares, mythics } = this.state;
-  };
-
   updateCollected = (event) => {
     const { currentSet, rares, mythics } = this.state;
     const name = event.target.id;
@@ -113,10 +107,9 @@ class App2 extends React.Component {
         item.collected = collected;
       }
     });
+    localStorage.setItem(`${currentSet}Rares`, JSON.stringify(rares));
+    localStorage.setItem(`${currentSet}Mythics`, JSON.stringify(mythics));
     this.setState({ rares, mythics });
-    // broke something here, LocalStorage items can't be parsed
-    localStorage.setItem(`${currentSet}Rares`, rares);
-    localStorage.setItem(`${currentSet}Mythics`, mythics);
   };
 
   componentDidMount = () => {
