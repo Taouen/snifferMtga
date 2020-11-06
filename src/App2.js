@@ -38,7 +38,7 @@ class App2 extends React.Component {
                   item.rarity === 'mythic' &&
                   !mythics.some((element) => element.name === item.name)
                 ) {
-                  item.collected = 2;
+                  item.collected = 0;
                   mythics.push(item);
                 }
               });
@@ -98,9 +98,25 @@ class App2 extends React.Component {
     const { rares, mythics } = this.state;
   };
 
-  updateCollected = (e) => {
-    const { rares, mythics } = this.state;
-    console.log(e);
+  updateCollected = (event) => {
+    const { currentSet, rares, mythics } = this.state;
+    const name = event.target.id;
+    const collected = event.target.value;
+
+    rares.forEach((item) => {
+      if (item.name === name) {
+        item.collected = collected;
+      }
+    });
+    mythics.forEach((item) => {
+      if (item.name === name) {
+        item.collected = collected;
+      }
+    });
+    this.setState({ rares, mythics });
+    // broke something here, LocalStorage items can't be parsed
+    localStorage.setItem(`${currentSet}Rares`, rares);
+    localStorage.setItem(`${currentSet}Mythics`, mythics);
   };
 
   componentDidMount = () => {
