@@ -170,7 +170,9 @@ class App2 extends React.Component {
 
     return (
       <div className="App">
-        <header className="App-header">MTGA Collection Tracker</header>
+        <header className="App-header text-green-600">
+          MTGA Collection Tracker
+        </header>
         <select
           id="set"
           value={this.state.currentSet}
