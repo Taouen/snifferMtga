@@ -1,13 +1,36 @@
 import React from 'react';
 import CardListItem from './components/CardListItem';
+import styled from 'styled-components';
+import './styles/main.css';
+// import base from './base';
 
 /* To DO
  
   - import set symbol
-  
   - enter packs owned
-  -  
+  - calculate packs needed
+  - 
 */
+const Main = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+`;
+
+const Select = styled.select`
+  font-size: 16px;
+  height: 2rem;
+`;
+
+const Ul = styled.ul`
+  padding: 0;
+`;
+
+const Controls = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
 
 class App2 extends React.Component {
   state = {
@@ -30,13 +53,15 @@ class App2 extends React.Component {
               data.data.map((item) => {
                 if (
                   item.rarity === 'rare' &&
-                  !rares.some((element) => element.name === item.name)
+                  !rares.some((element) => element.name === item.name) &&
+                  item.booster
                 ) {
                   item.collected = 0;
                   rares.push(item);
                 } else if (
                   item.rarity === 'mythic' &&
-                  !mythics.some((element) => element.name === item.name)
+                  !mythics.some((element) => element.name === item.name) &&
+                  item.booster
                 ) {
                   item.collected = 0;
                   mythics.push(item);
@@ -47,13 +72,15 @@ class App2 extends React.Component {
               data.data.map((item) => {
                 if (
                   item.rarity === 'rare' &&
-                  !rares.some((element) => element.name === item.name)
+                  !rares.some((element) => element.name === item.name) &&
+                  item.booster
                 ) {
                   item.collected = 0;
                   rares.push(item);
                 } else if (
                   item.rarity === 'mythic' &&
-                  !mythics.some((element) => element.name === item.name)
+                  !mythics.some((element) => element.name === item.name) &&
+                  item.booster
                 ) {
                   item.collected = 0;
                   mythics.push(item);
@@ -64,10 +91,13 @@ class App2 extends React.Component {
             localStorage.setItem(`${set}Mythics`, JSON.stringify(mythics));
           });
         });
+        console.log(JSON.stringify(rares));
+        console.log(JSON.stringify(mythics));
         this.setState({ rares, mythics });
       };
 
       getCards(data.search_uri);
+      console.log(data.icon_svg_uri);
     });
   };
 
@@ -113,6 +143,10 @@ class App2 extends React.Component {
   };
 
   componentDidMount = () => {
+    /* this.ref = base.syncState(`${this.state.mythics}`, {
+      context: this,
+      state: 'mythics',
+    }); */
     this.getLocalSetData(this.state.currentSet);
   };
 
@@ -169,31 +203,33 @@ class App2 extends React.Component {
     }
 
     return (
-      <div className="App">
-        <header className="App-header text-green-600">
+      <Main>
+        <header className="text-green-600 font-times">
           MTGA Collection Tracker
         </header>
-        <select
-          id="set"
-          value={this.state.currentSet}
-          onChange={this.handleSetChange}
-        >
-          <option value="znr">Zendikar Rising</option>
-          <option value="m21">Core Set 2021</option>
-          <option value="iko">Ikoria</option>
-          <option value="thb">Theros Beyond Death</option>
-          <option value="eld">Throne of Eldraine</option>
-        </select>
-        <select
-          id="rarity"
-          value={this.state.raritySelector}
-          onChange={this.handleRarityChange}
-        >
-          <option value="rare">Rare</option>
-          <option value="mythic">Mythic Rare</option>
-        </select>
+        <Controls>
+          <Select
+            id="set"
+            value={this.state.currentSet}
+            onChange={this.handleSetChange}
+          >
+            <option value="znr">Zendikar Rising</option>
+            <option value="m21">Core Set 2021</option>
+            <option value="iko">Ikoria</option>
+            <option value="thb">Theros Beyond Death</option>
+            <option value="eld">Throne of Eldraine</option>
+          </Select>
+          <Select
+            id="rarity"
+            value={this.state.raritySelector}
+            onChange={this.handleRarityChange}
+          >
+            <option value="rare">Rare</option>
+            <option value="mythic">Mythic Rare</option>
+          </Select>
+        </Controls>
         {list}
-      </div>
+      </Main>
     );
   }
 }
