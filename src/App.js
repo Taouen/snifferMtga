@@ -138,9 +138,7 @@ class App extends React.Component {
   render() {
     return (
       <Main>
-        <header className="text-green-600 font-times">
-          MTGA Collection Tracker
-        </header>
+        <header className="text-green-600 font-times">MTGA Sniffer</header>
         <Controls>
           <SetSelector
             id="set"
