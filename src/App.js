@@ -8,8 +8,11 @@ import ColorFilter from './components/ColorFilter';
 import CmcFilter from './components/CmcFilter';
 
 /* To DO
-   
+  
+- figure out logic for including hybrid cards when either of their colors are selected
+- 
 */
+
 const Main = styled.div`
   align-items: center;
   display: flex;

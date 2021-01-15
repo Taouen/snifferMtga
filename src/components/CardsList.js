@@ -13,6 +13,18 @@ const Ul = styled.ul`
 const CardImage = styled.img`
   margin: 0.25rem;
   border-radius: 0.7rem;
+  width: 148px;
+  height: 204px;
+
+  @media (min-width: 400px) {
+    width: 183px;
+    height: 255px;
+  }
+
+  @media (min-width: 800px) {
+    width: 244px;
+    height: 340px;
+  }
 `;
 
 export default function CardsList(props) {
