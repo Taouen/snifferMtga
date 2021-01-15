@@ -65,7 +65,7 @@ export default function CardsList(props) {
         // check each card and return the card image only if they match all filters.
 
         // this currently filters out hybrid cards since they have both colors.
-        const colorsMatch = item.colors.every((color) => {
+        const colorsMatch = colors.every((color) => {
           return filters.colors.indexOf(color) != -1;
         });
 
