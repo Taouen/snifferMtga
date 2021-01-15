@@ -4,4 +4,4 @@ Ever wonder what instant speed shenanigans your opponent is holding? MTGA Sniffe
 
 Select a set, and enter how much and what colors of mana your opponent has open. Sniffer will show you what cards your opponent could possibly have.
 
-Check it out here: [MTGA Sniffer](sniffer-mtga.vercel.app)
+Check it out here: [MTGA Sniffer](https://sniffer-mtga.vercel.app)
