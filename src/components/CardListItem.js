@@ -9,20 +9,21 @@ const Li = styled.li`
   align-items: center;
   list-style: none;
   padding: 0.5rem;
-  width: 300px;
+  width: 400px;
 
   &:last-child {
     border-bottom: 1px solid black;
   }
 `;
 
-const Select = styled.select`
-  font-size: 16px;
+const Info = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 class CardListItem extends React.Component {
   render = () => {
-    const { collected, name, updateCollected } = this.props;
+    const { name, manaCost, type } = this.props;
     let { colors } = this.props;
 
     if (colors.length >= 2) {
@@ -33,14 +34,11 @@ class CardListItem extends React.Component {
 
     return (
       <Li className={colors}>
-        {name}
-        <Select id={name} value={collected} onChange={updateCollected}>
-          <option value="0">0</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-        </Select>
+        <Info>
+          <div>{name}</div>
+          <div>{type}</div>
+        </Info>
+        {manaCost}
       </Li>
     );
   };
