@@ -1,4 +1,5 @@
 // import CardListItem from './CardListItem';
+import convertManaCostToCmc from './cmcConverter.js';
 
 import styled from 'styled-components';
 
@@ -27,16 +28,20 @@ const CardImage = styled.img`
   }
 `;
 
-export default function CardsList(props) {
-  const { cards, filters } = props;
-
+export default function CardsList({ cards, filters }) {
   return (
     <Ul>
       {cards.map((item) => {
-        // add functionality to filter items based on selected colors and available mana.
         const { id, name } = item;
-        // const variables for overall card values, let variables for values specific to a face
-        let { colors, mana_cost, type_line, image_uris } = item;
+        // const variables for overall card values, let variables for values specific to a card face
+        let {
+          colors,
+          keywords,
+          mana_cost,
+          type_line,
+          image_uris,
+          oracle_text,
+        } = item;
 
         if (item.card_faces) {
           if (!colors) {
@@ -46,6 +51,7 @@ export default function CardsList(props) {
                 (face.oracle_text && face.oracle_text.includes('Flash'))
               ) {
                 colors = face.colors;
+                image_uris = face.image_uris;
               }
             });
           }
@@ -57,19 +63,38 @@ export default function CardsList(props) {
             ) {
               mana_cost = face.mana_cost;
               type_line = face.type_line;
-              image_uris = face.image_uris;
             }
           });
         }
 
-        // check each card and return the card image only if they match all filters.
+        let foretellCost;
+
+        if (keywords.some((keyword) => keyword === 'Foretell')) {
+          let costIndex;
+          const arr = oracle_text.split(' ');
+          arr.forEach((element, index) => {
+            if (element.includes('Foretell')) {
+              costIndex = index + 1;
+            }
+          });
+          foretellCost = arr[costIndex];
+        }
+
+        if (foretellCost) {
+          foretellCost = convertManaCostToCmc(foretellCost);
+          console.log(foretellCost);
+        }
 
         // this currently filters out hybrid cards since they have both colors.
         const colorsMatch = colors.every((color) => {
-          return filters.colors.indexOf(color) != -1;
+          return filters.colors.indexOf(color) !== -1;
         });
 
-        if (item.cmc <= filters.cmc && colorsMatch) {
+        if (
+          (item.cmc <= filters.availableMana ||
+            foretellCost <= filters.availableMana) &&
+          colorsMatch
+        ) {
           return (
             <CardImage
               key={id}

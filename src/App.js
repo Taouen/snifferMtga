@@ -34,7 +34,7 @@ class App extends React.Component {
     currentSet: 'khm',
     filters: {
       colors: ['W', 'U', 'B', 'R', 'G'],
-      cmc: 10,
+      availableMana: 10,
     },
     lastUpdated: '',
     loading: true,
@@ -44,52 +44,60 @@ class App extends React.Component {
     const cardSet = await fetch(`https://api.scryfall.com/sets/${set}`);
     const cards = [];
 
-    cardSet.json().then((data) => {
-      const getCards = async (uri) => {
-        await fetch(uri).then((response) => {
-          response.json().then((data) => {
-            if (data.has_more) {
-              data.data.forEach((item) => {
-                const { booster, type_line, oracle_text } = item;
-                if (
-                  booster &&
-                  (type_line.includes('Instant') ||
-                    (oracle_text && oracle_text.includes('Flash')))
-                ) {
-                  cards.push(item);
-                }
-              });
-              getCards(data.next_page);
-            } else {
-              data.data.forEach((item) => {
-                const { booster, type_line, oracle_text } = item;
-                if (
-                  booster &&
-                  (type_line.includes('Instant') ||
-                    (oracle_text && oracle_text.includes('Flash')))
-                ) {
-                  cards.push(item);
-                }
-              });
-            }
+    cardSet
+      .json()
+      .then((data) => {
+        const getCards = async (uri) => {
+          await fetch(uri)
+            .then((response) => {
+              response
+                .json()
+                .then((data) => {
+                  if (data.has_more) {
+                    data.data.forEach((item) => {
+                      const { booster, type_line, keywords } = item;
+                      if (
+                        booster &&
+                        (type_line.includes('Instant') ||
+                          (keywords && keywords.indexOf('Flash') !== -1))
+                      ) {
+                        cards.push(item);
+                      }
+                    });
+                    getCards(data.next_page);
+                  } else {
+                    data.data.forEach((item) => {
+                      const { booster, type_line, keywords } = item;
+                      if (
+                        booster &&
+                        (type_line.includes('Instant') ||
+                          (keywords && keywords.indexOf('Flash') !== -1))
+                      ) {
+                        cards.push(item);
+                      }
+                    });
+                  }
 
-            localStorage.setItem(`${set}`, JSON.stringify(cards));
-            localStorage.setItem(
-              `${set}lastUpdated`,
-              JSON.stringify(Date.now())
-            );
-            this.setState({ cards, loading: false });
-          });
-        });
-      };
+                  sessionStorage.setItem(`${set}`, JSON.stringify(cards));
+                  /* sessionStorage.setItem(
+                    `${set}lastUpdated`,
+                    JSON.stringify(Date.now())
+                  ); */
+                  this.setState({ cards, loading: false });
+                })
+                .catch(console.error());
+            })
+            .catch(console.error());
+        };
 
-      getCards(data.search_uri);
-    });
+        getCards(data.search_uri);
+      })
+      .catch(console.error());
   };
 
   getLocalSetData = (set) => {
-    if (localStorage.getItem(`${set}`)) {
-      const cards = JSON.parse(localStorage.getItem(`${set}`));
+    if (sessionStorage.getItem(`${set}`)) {
+      const cards = JSON.parse(sessionStorage.getItem(`${set}`));
       this.setState({ cards, loading: false });
     } else {
       this.getSetData(set);
@@ -111,7 +119,7 @@ class App extends React.Component {
   handleCmcChange = (event) => {
     const value = event.target.value;
     const { filters } = this.state;
-    filters.cmc = value;
+    filters.availableMana = value;
     this.setState({ filters });
   };
 
@@ -119,17 +127,17 @@ class App extends React.Component {
     const currentSet = event.target.value;
     const now = Date.now();
     const lastUpdated = JSON.parse(
-      localStorage.getItem(`${currentSet}lastUpdated`)
+      sessionStorage.getItem(`${currentSet}lastUpdated`)
     );
 
     this.setState({ loading: true });
 
-    // if more than 24 hours has passed, fetch the set again, otherwise use the current localstorage version
-    if (now - lastUpdated > 86400000) {
+    // if more than 24 hours has passed, fetch the set again, otherwise use the current sessionStorage version
+    /* if (now - lastUpdated > 86400000) {
       this.getSetData(currentSet);
-    } else {
-      this.getLocalSetData(currentSet);
-    }
+    } else { */
+    this.getLocalSetData(currentSet);
+    // }
 
     this.setState({ currentSet });
   };
@@ -151,10 +159,9 @@ class App extends React.Component {
           <ColorFilter handleColorChange={this.handleColorChange} />
           <CmcFilter handleCmcChange={this.handleCmcChange} />
         </Controls>
-        {this.state.loading && (
+        {this.state.loading ? (
           <Loader type="Oval" color="#00BFFF" height={40} width={40} />
-        )}
-        {!this.state.loading && (
+        ) : (
           <CardsList filters={this.state.filters} cards={this.state.cards} />
         )}
       </Main>

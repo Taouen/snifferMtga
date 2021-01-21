@@ -13,7 +13,7 @@ export default function CmcFilter(props) {
             value={value}
             onChange={props.handleCmcChange}
           />
-          <label for={value}>{value}</label>
+          <label htmlFor={value}>{value}</label>
         </React.Fragment>
       ))}
     </div>
