@@ -6,6 +6,7 @@ import './styles/main.css';
 import Loader from 'react-loader-spinner';
 import ColorFilter from './components/ColorFilter';
 import CmcFilter from './components/CmcFilter';
+import SetControls from './components/SetControls';
 
 /* To DO
   
@@ -24,8 +25,9 @@ const Controls = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  margin: 1.5rem 0;
-  height: 6rem;
+  padding: 1.5rem 0;
+  font-size: 1.2rem;
+  height: 8rem;
 `;
 
 class App extends React.Component {
@@ -33,10 +35,14 @@ class App extends React.Component {
     cards: [],
     currentSet: 'khm',
     filters: {
-      colors: ['W', 'U', 'B', 'R', 'G'],
+      colors: [
+        /* 'W', 'U', 'B', 'R', 'G' */
+      ],
       availableMana: 10,
     },
-    lastUpdated: '',
+    setControls: {
+      foretold: false,
+    },
     loading: true,
   };
 
@@ -79,10 +85,6 @@ class App extends React.Component {
                   }
 
                   sessionStorage.setItem(`${set}`, JSON.stringify(cards));
-                  /* sessionStorage.setItem(
-                    `${set}lastUpdated`,
-                    JSON.stringify(Date.now())
-                  ); */
                   this.setState({ cards, loading: false });
                 })
                 .catch(console.error());
@@ -125,21 +127,15 @@ class App extends React.Component {
 
   handleSetChange = (event) => {
     const currentSet = event.target.value;
-    const now = Date.now();
-    const lastUpdated = JSON.parse(
-      sessionStorage.getItem(`${currentSet}lastUpdated`)
-    );
-
     this.setState({ loading: true });
-
-    // if more than 24 hours has passed, fetch the set again, otherwise use the current sessionStorage version
-    /* if (now - lastUpdated > 86400000) {
-      this.getSetData(currentSet);
-    } else { */
     this.getLocalSetData(currentSet);
-    // }
-
     this.setState({ currentSet });
+  };
+
+  handleSetControlsChange = (name, value) => {
+    const setControls = this.state.setControls;
+    setControls[name] = value;
+    this.setState({ setControls });
   };
 
   componentDidMount = () => {
@@ -147,22 +143,33 @@ class App extends React.Component {
   };
 
   render() {
+    const { currentSet, setControls, loading, cards, filters } = this.state;
     return (
       <Main>
         <header className="text-green-600 font-times">MTGA Sniffer</header>
         <Controls>
           <SetSelector
             id="set"
-            currentSet={this.state.currentSet}
+            currentSet={currentSet}
             handleSetChange={this.handleSetChange}
           />
           <ColorFilter handleColorChange={this.handleColorChange} />
           <CmcFilter handleCmcChange={this.handleCmcChange} />
+          <SetControls
+            currentSet={currentSet}
+            setControls={setControls}
+            handleSetControlsChange={this.handleSetControlsChange}
+          />
         </Controls>
-        {this.state.loading ? (
+        {loading ? (
           <Loader type="Oval" color="#00BFFF" height={40} width={40} />
         ) : (
-          <CardsList filters={this.state.filters} cards={this.state.cards} />
+          <CardsList
+            cards={cards}
+            currentSet={currentSet}
+            filters={filters}
+            setControls={setControls}
+          />
         )}
       </Main>
     );

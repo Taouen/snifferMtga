@@ -1,5 +1,5 @@
 // import CardListItem from './CardListItem';
-import convertManaCostToCmc from './cmcConverter.js';
+import khmFilter from './setFilters/khm';
 
 import styled from 'styled-components';
 
@@ -28,7 +28,7 @@ const CardImage = styled.img`
   }
 `;
 
-export default function CardsList({ cards, filters }) {
+export default function CardsList({ cards, filters, currentSet, setControls }) {
   return (
     <Ul>
       {cards.map((item) => {
@@ -66,9 +66,14 @@ export default function CardsList({ cards, filters }) {
             }
           });
         }
-
         let foretellCost;
 
+        switch (currentSet) {
+          case 'khm':
+            foretellCost = khmFilter(item);
+        }
+
+        /* 
         if (keywords.some((keyword) => keyword === 'Foretell')) {
           let costIndex;
           const arr = oracle_text.split(' ');
@@ -83,7 +88,7 @@ export default function CardsList({ cards, filters }) {
         if (foretellCost) {
           foretellCost = convertManaCostToCmc(foretellCost);
           console.log(foretellCost);
-        }
+        } */
 
         // this currently filters out hybrid cards since they have both colors.
         const colorsMatch = colors.every((color) => {
@@ -92,7 +97,7 @@ export default function CardsList({ cards, filters }) {
 
         if (
           (item.cmc <= filters.availableMana ||
-            foretellCost <= filters.availableMana) &&
+            (setControls.foretold && foretellCost <= filters.availableMana)) &&
           colorsMatch
         ) {
           return (
@@ -106,13 +111,6 @@ export default function CardsList({ cards, filters }) {
           );
         }
       })}
-      {/* <CardListItem
-            key={id}
-            name={name}
-            colors={colors}
-            manaCost={mana_cost}
-            type={type_line}
-          /> */}
     </Ul>
   );
 }

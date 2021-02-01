@@ -17,7 +17,7 @@ export default function ColorFilter(props) {
             <input
               type="checkbox"
               name="colors"
-              defaultChecked={true}
+              // defaultChecked={true}
               id={color.name}
               value={color.value}
               onChange={props.handleColorChange}
