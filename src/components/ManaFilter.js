@@ -15,7 +15,7 @@ const Value = styled.div`
 `;
 
 export default function ColorFilter(props) {
-  const { mana, handleManaChange } = props;
+  const { mana, handleManaChange, resetMana } = props;
   return (
     <Controls>
       {Object.keys(mana).map((color, index) => {
@@ -29,6 +29,7 @@ export default function ColorFilter(props) {
           </React.Fragment>
         );
       })}
+      <button onClick={() => resetMana()}>Reset</button>
     </Controls>
   );
 }

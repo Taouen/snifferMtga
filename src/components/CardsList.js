@@ -1,4 +1,3 @@
-// import CardListItem from './CardListItem';
 import khmFilter from './setFilters/khm';
 
 import styled from 'styled-components';
@@ -37,7 +36,7 @@ export default function CardsList({
 }) {
   return (
     <Ul>
-      {cards.map((item) => {
+      {cards.forEach((item) => {
         const { id, name } = item;
         // const variables for overall card values, let variables for values specific to a card face
         let {
@@ -97,6 +96,7 @@ export default function CardsList({
         } */
 
         // this currently filters out hybrid cards since they have both colors.
+
         const colorsMatch = colors.every((color) => {
           return mana[color] > 0;
         });

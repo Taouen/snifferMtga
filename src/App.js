@@ -4,8 +4,6 @@ import SetSelector from './components/SetSelector';
 import styled from 'styled-components';
 import './styles/main.css';
 import Loader from 'react-loader-spinner';
-import ColorFilter from './components/ColorFilter';
-import CmcFilter from './components/CmcFilter';
 import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
 
@@ -36,12 +34,12 @@ class App extends React.Component {
     cards: [],
     currentSet: 'khm',
     mana: {
-      w: 0,
-      u: 0,
-      b: 0,
-      r: 0,
-      g: 0,
-      c: 0,
+      W: 0,
+      U: 0,
+      B: 0,
+      R: 0,
+      G: 0,
+      C: 0,
     },
     totalMana: 0,
     setControls: {
@@ -126,13 +124,24 @@ class App extends React.Component {
   handleManaChange = (color, change) => {
     const { mana } = this.state;
     let { totalMana } = this.state;
-
     mana[color] += change;
-
-    for (color in mana) {
-      totalMana += color.value;
+    if (mana[color] < 0) {
+      mana[color] = 0;
     }
+    totalMana = Object.values(mana).reduce((a, b) => a + b, 0);
     this.setState({ totalMana, mana });
+  };
+
+  resetMana = () => {
+    const { mana } = this.state;
+    let { totalMana } = this.state;
+
+    for (let color in mana) {
+      mana[color] = 0;
+    }
+    totalMana = 0;
+
+    this.setState({ mana, totalMana });
   };
 
   componentDidMount = () => {
@@ -161,6 +170,7 @@ class App extends React.Component {
           <ManaFilter
             mana={this.state.mana}
             handleManaChange={this.handleManaChange}
+            resetMana={this.resetMana}
           />
 
           <SetControls
