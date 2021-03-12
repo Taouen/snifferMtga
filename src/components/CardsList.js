@@ -28,7 +28,13 @@ const CardImage = styled.img`
   }
 `;
 
-export default function CardsList({ cards, filters, currentSet, setControls }) {
+export default function CardsList({
+  cards,
+  mana,
+  totalMana,
+  currentSet,
+  setControls,
+}) {
   return (
     <Ul>
       {cards.map((item) => {
@@ -92,12 +98,12 @@ export default function CardsList({ cards, filters, currentSet, setControls }) {
 
         // this currently filters out hybrid cards since they have both colors.
         const colorsMatch = colors.every((color) => {
-          return filters.colors.indexOf(color) !== -1;
+          return mana[color] > 0;
         });
 
         if (
-          (item.cmc <= filters.availableMana ||
-            (setControls.foretold && foretellCost <= filters.availableMana)) &&
+          (item.cmc <= totalMana ||
+            (setControls.foretold && foretellCost <= totalMana)) &&
           colorsMatch
         ) {
           return (

@@ -6,6 +6,7 @@ import './styles/main.css';
 import Loader from 'react-loader-spinner';
 import ColorFilter from './components/ColorFilter';
 import CmcFilter from './components/CmcFilter';
+import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
 
 /* To DO
@@ -34,12 +35,15 @@ class App extends React.Component {
   state = {
     cards: [],
     currentSet: 'khm',
-    filters: {
-      colors: [
-        /* 'W', 'U', 'B', 'R', 'G' */
-      ],
-      availableMana: 10,
+    mana: {
+      w: 0,
+      u: 0,
+      b: 0,
+      r: 0,
+      g: 0,
+      c: 0,
     },
+    totalMana: 0,
     setControls: {
       foretold: false,
     },
@@ -106,25 +110,6 @@ class App extends React.Component {
     }
   };
 
-  handleColorChange = (event) => {
-    const value = event.target.value;
-    const { filters } = this.state;
-
-    if (!filters.colors.some((item) => item === value)) {
-      filters.colors.push(value);
-    } else {
-      filters.colors.splice(filters.colors.indexOf(value), 1);
-    }
-    this.setState({ filters });
-  };
-
-  handleCmcChange = (event) => {
-    const value = event.target.value;
-    const { filters } = this.state;
-    filters.availableMana = value;
-    this.setState({ filters });
-  };
-
   handleSetChange = (event) => {
     const currentSet = event.target.value;
     this.setState({ loading: true });
@@ -138,12 +123,32 @@ class App extends React.Component {
     this.setState({ setControls });
   };
 
+  handleManaChange = (color, change) => {
+    const { mana } = this.state;
+    let { totalMana } = this.state;
+
+    mana[color] += change;
+
+    for (color in mana) {
+      totalMana += color.value;
+    }
+    this.setState({ totalMana, mana });
+  };
+
   componentDidMount = () => {
     this.getLocalSetData(this.state.currentSet);
   };
 
   render() {
-    const { currentSet, setControls, loading, cards, filters } = this.state;
+    const {
+      currentSet,
+      setControls,
+      loading,
+      cards,
+      mana,
+      totalMana,
+    } = this.state;
+
     return (
       <Main>
         <header className="text-green-600 font-times">MTGA Sniffer</header>
@@ -153,8 +158,11 @@ class App extends React.Component {
             currentSet={currentSet}
             handleSetChange={this.handleSetChange}
           />
-          <ColorFilter handleColorChange={this.handleColorChange} />
-          <CmcFilter handleCmcChange={this.handleCmcChange} />
+          <ManaFilter
+            mana={this.state.mana}
+            handleManaChange={this.handleManaChange}
+          />
+
           <SetControls
             currentSet={currentSet}
             setControls={setControls}
@@ -167,8 +175,9 @@ class App extends React.Component {
           <CardsList
             cards={cards}
             currentSet={currentSet}
-            filters={filters}
+            mana={mana}
             setControls={setControls}
+            totalMana={totalMana}
           />
         )}
       </Main>
