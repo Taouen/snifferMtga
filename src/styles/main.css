@@ -1,31 +1,21 @@
 .W {
-  /* background-color: #eeedd7; */
-  background: linear-gradient(to top, #ffffff99, #ffffff99),
-    url(https://c2.scryfall.com/file/scryfall-symbols/card-symbols/W.svg);
+  background-color: #eeedd7;
 }
 
 .U {
-  /* background-color: #aad9ed; */
-  background: linear-gradient(to top, #ffffff99, #ffffff99),
-    url(https://c2.scryfall.com/file/scryfall-symbols/card-symbols/U.svg);
+  background-color: #aad9ed;
 }
 
 .B {
-  /* background-color: #c3b9b5; */
-  background: linear-gradient(to top, #ffffff99, #ffffff99),
-    url(https://c2.scryfall.com/file/scryfall-symbols/card-symbols/B.svg);
+  background-color: #c3b9b5;
 }
 
 .R {
-  /* background-color: #e8a68c; */
-  background: linear-gradient(to top, #ffffff99, #ffffff99),
-    url(https://c2.scryfall.com/file/scryfall-symbols/card-symbols/R.svg);
+  background-color: #e8a68c;
 }
 
 .G {
-  /* background-color: #9bd2b0; */
-  background: linear-gradient(to top, #ffffff99, #ffffff99),
-    url(https://c2.scryfall.com/file/scryfall-symbols/card-symbols/G.svg);
+  background-color: #9bd2b0;
 }
 
 .M {
@@ -33,7 +23,5 @@
 }
 
 .C {
-  /* background-color: #d1d4d9; */
-  background: linear-gradient(to top, #ffffff80, #ffffff80),
-    url(https://c2.scryfall.com/file/scryfall-symbols/card-symbols/C.svg);
+  background-color: #d1d4d9;
 }

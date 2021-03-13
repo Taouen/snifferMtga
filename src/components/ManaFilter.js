@@ -79,7 +79,7 @@ export default function ColorFilter(props) {
         })}
       </Controls>
       <Reset type="reset" onClick={() => resetMana()}>
-        Reset
+        Reset Mana
       </Reset>
     </>
   );
