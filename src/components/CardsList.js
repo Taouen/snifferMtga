@@ -36,17 +36,10 @@ export default function CardsList({
 }) {
   return (
     <Ul>
-      {cards.forEach((item) => {
+      {cards.map((item) => {
         const { id, name } = item;
         // const variables for overall card values, let variables for values specific to a card face
-        let {
-          colors,
-          keywords,
-          mana_cost,
-          type_line,
-          image_uris,
-          oracle_text,
-        } = item;
+        let { colors, mana_cost, type_line, image_uris } = item;
 
         if (item.card_faces) {
           if (!colors) {

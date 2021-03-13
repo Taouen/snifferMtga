@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { useState } from 'react';
 
 const Select = styled.select`
-  font-size: 16px;
+  font-size: 1rem;
   height: 2rem;
 `;
 

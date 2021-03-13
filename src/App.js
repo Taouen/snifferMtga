@@ -26,7 +26,6 @@ const Controls = styled.div`
   justify-content: space-between;
   padding: 1.5rem 0;
   font-size: 1.2rem;
-  height: 8rem;
 `;
 
 class App extends React.Component {
