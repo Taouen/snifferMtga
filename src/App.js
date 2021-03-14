@@ -159,7 +159,7 @@ class App extends React.Component {
 
     return (
       <Main>
-        <header className="text-green-600 font-times">MTGA Sniffer</header>
+        <header>MTGA Sniffer</header>
         <Controls>
           <SetSelector
             id="set"

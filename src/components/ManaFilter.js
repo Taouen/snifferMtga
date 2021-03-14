@@ -65,6 +65,7 @@ export default function ColorFilter(props) {
                   {mana[color]}
                   <Logo
                     src={`https://c2.scryfall.com/file/scryfall-symbols/card-symbols/${color}.svg`}
+                    alt={color}
                   />
                 </Value>
                 <ValueButton

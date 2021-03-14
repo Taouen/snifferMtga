@@ -39,7 +39,7 @@ export default function CardsList({
       {cards.map((item) => {
         const { id, name } = item;
         // const variables for overall card values, let variables for values specific to a card face
-        let { colors, mana_cost, type_line, image_uris } = item;
+        let { colors, mana_cost, image_uris } = item;
 
         if (item.card_faces) {
           if (!colors) {
@@ -60,7 +60,6 @@ export default function CardsList({
               (face.oracle_text && face.oracle_text.includes('Flash'))
             ) {
               mana_cost = face.mana_cost;
-              type_line = face.type_line;
             }
           });
         }
@@ -71,33 +70,40 @@ export default function CardsList({
             foretellCost = khmFilter(item);
         }
 
-        /* 
-        if (keywords.some((keyword) => keyword === 'Foretell')) {
-          let costIndex;
-          const arr = oracle_text.split(' ');
-          arr.forEach((element, index) => {
-            if (element.includes('Foretell')) {
-              costIndex = index + 1;
-            }
-          });
-          foretellCost = arr[costIndex];
-        }
+        /* mana_cost.replace(/[^a-z]/gi, '').split(''); this is an array with the color pips only from the mana cost. will turn a hybrid pip into two pips as is, will need to adjust for that */
 
-        if (foretellCost) {
-          foretellCost = convertManaCostToCmc(foretellCost);
-          console.log(foretellCost);
-        } */
+        // returns an object with the quantities of each color of mana required for the card
+        const findRequiredMana = (array) => {
+          return array.reduce((color, quantity) => {
+            color[quantity] = color[quantity] ? color[quantity] + 1 : 1;
+            return color;
+          }, {});
+        };
 
-        // this currently filters out hybrid cards since they have both colors.
-
-        const colorsMatch = colors.every((color) => {
-          return mana[color] > 0;
+        const requiredMana = findRequiredMana(
+          mana_cost.replace(/[^a-z]/gi, '').split('')
+        );
+        const hasRequiredMana = Object.keys(requiredMana).every((color) => {
+          return requiredMana[color] <= mana[color];
         });
+
+        let requiredForetellMana;
+        let hasRequiredForetellMana;
+        if (foretellCost) {
+          requiredForetellMana = findRequiredMana(
+            foretellCost.replace(/[^a-z]/gi, '').split('')
+          );
+          hasRequiredForetellMana = Object.keys(requiredForetellMana).every(
+            (color) => {
+              return requiredForetellMana[color] <= mana[color];
+            }
+          );
+        }
 
         if (
           (item.cmc <= totalMana ||
-            (setControls.foretold && foretellCost <= totalMana)) &&
-          colorsMatch
+            (setControls.foretold && hasRequiredForetellMana)) &&
+          hasRequiredMana
         ) {
           return (
             <CardImage
@@ -105,7 +111,7 @@ export default function CardsList({
               src={image_uris.normal}
               width="244px"
               height="340px"
-              alt={name}
+              alt={`${name}, ${mana_cost}`}
             />
           );
         }

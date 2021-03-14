@@ -1,5 +1,3 @@
-import convertManaCostToCmc from '../cmcConverter.js';
-
 export default function khmFilter(card) {
   let foretellCost;
 
@@ -15,9 +13,6 @@ export default function khmFilter(card) {
     foretellCost = arr[costIndex];
   }
 
-  if (foretellCost) {
-    foretellCost = convertManaCostToCmc(foretellCost);
-  }
   return foretellCost;
 }
 
