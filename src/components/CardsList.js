@@ -1,5 +1,5 @@
 import khmFilter from './setFilters/khm';
-
+import convertManaCostToCmc from './cmcConverter';
 import styled from 'styled-components';
 
 const Ul = styled.ul`
@@ -89,6 +89,7 @@ export default function CardsList({
 
         let requiredForetellMana;
         let hasRequiredForetellMana;
+        let foretellCmc;
         if (foretellCost) {
           requiredForetellMana = findRequiredMana(
             foretellCost.replace(/[^a-z]/gi, '').split('')
@@ -98,12 +99,14 @@ export default function CardsList({
               return requiredForetellMana[color] <= mana[color];
             }
           );
+          foretellCmc = convertManaCostToCmc(foretellCost);
         }
 
         if (
-          (item.cmc <= totalMana ||
-            (setControls.foretold && hasRequiredForetellMana)) &&
-          hasRequiredMana
+          (item.cmc <= totalMana && hasRequiredMana) ||
+          (setControls.foretold &&
+            hasRequiredForetellMana &&
+            foretellCmc <= totalMana)
         ) {
           return (
             <CardImage
