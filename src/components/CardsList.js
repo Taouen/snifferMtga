@@ -35,7 +35,7 @@ export default function CardsList({
   setControls,
 }) {
   return (
-    <Ul>
+    <ul className="flex flex-wrap justify-center">
       {cards.map((item) => {
         const { id, name } = item;
         // const variables for overall card values, let variables for values specific to a card face
@@ -68,6 +68,7 @@ export default function CardsList({
         switch (currentSet) {
           case 'khm':
             foretellCost = khmFilter(item);
+            break;
         }
 
         /* mana_cost.replace(/[^a-z]/gi, '').split(''); this is an array with the color pips only from the mana cost. will turn a hybrid pip into two pips as is, will need to adjust for that */
@@ -109,16 +110,15 @@ export default function CardsList({
             foretellCmc <= totalMana)
         ) {
           return (
-            <CardImage
+            <img
+              className="m-1 rounded-lg w-48 h-64"
               key={id}
               src={image_uris.normal}
-              width="244px"
-              height="340px"
               alt={`${name}, ${mana_cost}`}
             />
           );
         }
       })}
-    </Ul>
+    </ul>
   );
 }

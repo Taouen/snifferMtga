@@ -1,8 +1,7 @@
 import React from 'react';
 import CardsList from './components/CardsList';
 import SetSelector from './components/SetSelector';
-import styled from 'styled-components';
-import './styles/main.css';
+// import './styles/main.css';
 import Loader from 'react-loader-spinner';
 import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
@@ -12,21 +11,6 @@ import SetControls from './components/SetControls';
 - figure out logic for including hybrid cards when either of their colors are selected
 - 
 */
-
-const Main = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-`;
-
-const Controls = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.5rem 0;
-  font-size: 1.2rem;
-`;
 
 class App extends React.Component {
   state = {
@@ -163,15 +147,17 @@ class App extends React.Component {
     } = this.state;
 
     return (
-      <Main>
-        <header>MTGA Sniffer</header>
+      <main className="flex flex-col items-center">
+        <header>
+          <h1 className="text-2xl">MTGA Sniffer</h1>
+        </header>
         {error ? (
           <p>
             An error occurred while trying to fetch resources. Please refresh
             the page to try again.
           </p>
         ) : (
-          <Controls>
+          <div className="flex flex-col items-center justify-between mb-4 text-lg">
             <SetSelector
               id="set"
               currentSet={currentSet}
@@ -188,7 +174,7 @@ class App extends React.Component {
               setControls={setControls}
               handleSetControlsChange={this.handleSetControlsChange}
             />
-          </Controls>
+          </div>
         )}
         {loading ? (
           <Loader type="Oval" color="#00BFFF" height={40} width={40} />
@@ -201,7 +187,7 @@ class App extends React.Component {
             totalMana={totalMana}
           />
         )}
-      </Main>
+      </main>
     );
   }
 }
