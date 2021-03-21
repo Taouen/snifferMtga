@@ -1,31 +1,5 @@
 import khmFilter from './setFilters/khm';
 import convertManaCostToCmc from './cmcConverter';
-import styled from 'styled-components';
-
-const Ul = styled.ul`
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-`;
-
-const CardImage = styled.img`
-  margin: 0.25rem;
-  border-radius: 0.7rem;
-  width: 148px;
-  height: 204px;
-
-  @media (min-width: 400px) {
-    width: 183px;
-    height: 255px;
-  }
-
-  @media (min-width: 800px) {
-    width: 244px;
-    height: 340px;
-  }
-`;
 
 export default function CardsList({
   cards,

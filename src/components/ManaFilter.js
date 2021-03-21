@@ -1,87 +1,46 @@
 import React from 'react';
-import styled from 'styled-components';
-
-const Controls = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 1rem 0;
-  max-width: 100%;
-  width: 24rem;
-`;
-
-const ColorDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 4rem;
-`;
-
-const Value = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  font-size: 2.5rem;
-  height: 2.5rem;
-  justify-content: space-around;
-  width: 80%;
-`;
-
-const Logo = styled.img`
-  height: 1.5rem;
-`;
-
-const ValueButton = styled.button`
-  font-size: 1.1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0.5rem auto;
-  height: 2rem;
-  width: 2.5rem;
-`;
-
-const Reset = styled.button`
-  font-size: 1rem;
-  margin-bottom: 1rem;
-`;
 
 export default function ColorFilter(props) {
   const { mana, handleManaChange, resetMana } = props;
   return (
     <>
-      <Controls>
+      <div className="flex flex-row justify-between my-4 mx-0 max-w-full w-96">
         {Object.keys(mana).map((color, index) => {
           return (
-            <React.Fragment key={index}>
-              <ColorDiv>
-                <ValueButton
-                  type="button"
-                  onClick={() => handleManaChange(color, 1)}
-                >
-                  +
-                </ValueButton>
-                <Value>
-                  {mana[color]}
-                  <Logo
-                    src={`https://c2.scryfall.com/file/scryfall-symbols/card-symbols/${color}.svg`}
-                    alt={color}
-                  />
-                </Value>
-                <ValueButton
-                  type="button"
-                  onClick={() => handleManaChange(color, -1)}
-                >
-                  -
-                </ValueButton>
-              </ColorDiv>
-            </React.Fragment>
+            <div key={index} className="flex flex-col items-center w-16">
+              <div
+                className="flex justify-center items-center text-xl my-2 mx-0 h-8 w-10"
+                type="button"
+                onClick={() => handleManaChange(color, 1)}
+              >
+                +
+              </div>
+              <div className="flex flex-row items-center text-4xl h-10 justify-around w-4/5">
+                {mana[color]}
+                <img
+                  className="h-6"
+                  src={`https://c2.scryfall.com/file/scryfall-symbols/card-symbols/${color}.svg`}
+                  alt={color}
+                />
+              </div>
+              <button
+                className="flex justify-center items-center text-xl my-2 mx-0 h-8 w-10"
+                type="button"
+                onClick={() => handleManaChange(color, -1)}
+              >
+                -
+              </button>
+            </div>
           );
         })}
-      </Controls>
-      <Reset type="reset" onClick={() => resetMana()}>
+      </div>
+      <button
+        className="text-base mb-4"
+        type="reset"
+        onClick={() => resetMana()}
+      >
         Reset Mana
-      </Reset>
+      </button>
     </>
   );
 }

@@ -1,25 +1,4 @@
 import React from 'react';
-import styled from 'styled-components';
-
-const Li = styled.li`
-  border: 1px solid black;
-  border-bottom: none;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  list-style: none;
-  padding: 0.5rem;
-  width: 400px;
-
-  &:last-child {
-    border-bottom: 1px solid black;
-  }
-`;
-
-const Info = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
 
 class CardListItem extends React.Component {
   render = () => {
@@ -31,15 +10,19 @@ class CardListItem extends React.Component {
     } else if (colors.length === 0) {
       colors = 'C';
     }
+    const listItemClasses = classnames(
+      { colors },
+      'flex justify-between items-center p-2 w-96 border border-black border-b-0 last:border-b last:border-b-black'
+    );
 
     return (
-      <Li className={colors}>
-        <Info>
+      <li className={listItemClasses}>
+        <div className="flex flex-col">
           <div>{name}</div>
           <div>{type}</div>
-        </Info>
+        </div>
         {manaCost}
-      </Li>
+      </li>
     );
   };
 }

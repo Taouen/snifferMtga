@@ -1,11 +1,4 @@
-import styled from 'styled-components';
 import { useState } from 'react';
-
-const Select = styled.select`
-  font-size: 1rem;
-  width: 60%;
-  height: 2rem;
-`;
 
 export default function SetSelector(props) {
   // manually entering sets for now. Might attempt later on to fetch sets from a selected format
@@ -24,7 +17,12 @@ export default function SetSelector(props) {
   ]);
 
   return (
-    <Select id="set" value={props.currentSet} onChange={props.handleSetChange}>
+    <select
+      className="text-base w-3/5 h-8"
+      id="set"
+      value={props.currentSet}
+      onChange={props.handleSetChange}
+    >
       {sets.map((set, index) => {
         return (
           <option key={index} value={set.code}>
@@ -32,6 +30,6 @@ export default function SetSelector(props) {
           </option>
         );
       })}
-    </Select>
+    </select>
   );
 }
