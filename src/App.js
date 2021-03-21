@@ -148,7 +148,7 @@ class App extends React.Component {
 
     return (
       <main className="flex flex-col items-center">
-        <header>
+        <header className="mt-4">
           <h1 className="text-2xl">MTGA Sniffer</h1>
         </header>
         {error ? (
@@ -168,7 +168,6 @@ class App extends React.Component {
               handleManaChange={this.handleManaChange}
               resetMana={this.resetMana}
             />
-
             <SetControls
               currentSet={currentSet}
               setControls={setControls}

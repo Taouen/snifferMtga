@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 
 class CardListItem extends React.Component {
   render = () => {
@@ -10,10 +11,11 @@ class CardListItem extends React.Component {
     } else if (colors.length === 0) {
       colors = 'C';
     }
-    const listItemClasses = classnames(
+
+    const listItemClasses = classNames([
       { colors },
-      'flex justify-between items-center p-2 w-96 border border-black border-b-0 last:border-b last:border-b-black'
-    );
+      'flex justify-between items-center p-2 w-96 border border-black border-b-0 last:border-b last:border-b-black',
+    ]);
 
     return (
       <li className={listItemClasses}>

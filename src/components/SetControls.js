@@ -7,9 +7,10 @@ export default function SetControls({
     case 'khm':
       const { foretold } = setControls;
       return (
-        <div>
+        <div className="flex items-center">
           <label htmlFor="foretold">Cards Foretold?</label>
           <input
+            className="ml-2"
             type="checkbox"
             name="foretold"
             id="foretold"
