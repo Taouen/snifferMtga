@@ -2,7 +2,7 @@ import React from 'react';
 import CardsList from './components/CardsList';
 import SetSelector from './components/SetSelector';
 // import './styles/main.css';
-import Loader from 'react-loader-spinner';
+import { PropagateLoader } from 'react-spinners';
 import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
 
@@ -176,7 +176,7 @@ class App extends React.Component {
           </div>
         )}
         {loading ? (
-          <Loader type="Oval" color="#00BFFF" height={40} width={40} />
+          <PropagateLoader loading={loading} color="#80b2e0" />
         ) : (
           <CardsList
             cards={cards}
