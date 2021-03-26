@@ -3,6 +3,7 @@ import { useState } from 'react';
 export default function SetSelector(props) {
   // manually entering sets for now. Might attempt later on to fetch sets from a selected format
   const [sets] = useState([
+    { code: 'stx', name: 'Strixhaven' },
     { code: 'khm', name: 'Kaldheim' },
     { code: 'znr', name: 'Zendikar Rising' },
     { code: 'm21', name: 'Core Set 2021' },
@@ -18,7 +19,7 @@ export default function SetSelector(props) {
 
   return (
     <select
-      className="text-base w-3/5 h-8 border border-gray-400 rounded mt-4 dark:bg-gray-800 dark:text-white"
+      className="text-base w-3/5 h-8 border border-gray-400 rounded mt-4"
       id="set"
       value={props.currentSet}
       onChange={props.handleSetChange}

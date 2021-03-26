@@ -8,14 +8,16 @@ export default function SetControls({
       const { foretold } = setControls;
       return (
         <div className="flex items-center">
-          <label htmlFor="foretold">Cards Foretold?</label>
           <input
-            className="ml-2"
+            className="mr-2"
             type="checkbox"
             name="foretold"
             id="foretold"
             onChange={() => handleSetControlsChange('foretold', !foretold)}
           />
+          <label className="text-base" htmlFor="foretold">
+            Include Foretold cards
+          </label>
         </div>
       );
 

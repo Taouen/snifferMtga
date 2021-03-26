@@ -1,8 +1,7 @@
 import React from 'react';
 import CardsList from './components/CardsList';
 import SetSelector from './components/SetSelector';
-// import './styles/main.css';
-import { PropagateLoader } from 'react-spinners';
+import { PulseLoader } from 'react-spinners';
 import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
 
@@ -176,7 +175,7 @@ class App extends React.Component {
           </div>
         )}
         {loading ? (
-          <PropagateLoader loading={loading} color="#80b2e0" />
+          <PulseLoader loading={loading} color="#80b2e0" size="12" />
         ) : (
           <CardsList
             cards={cards}
@@ -184,6 +183,7 @@ class App extends React.Component {
             mana={mana}
             setControls={setControls}
             totalMana={totalMana}
+            getLocalSetData={this.getLocalSetData}
           />
         )}
       </main>

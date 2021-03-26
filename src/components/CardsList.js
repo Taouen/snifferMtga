@@ -7,6 +7,7 @@ export default function CardsList({
   totalMana,
   currentSet,
   setControls,
+  getLocalSetData,
 }) {
   return (
     <ul className="flex flex-wrap justify-center">
@@ -37,11 +38,13 @@ export default function CardsList({
             }
           });
         }
-        let foretellCost;
 
+        let foretellCost;
         switch (currentSet) {
           case 'khm':
             foretellCost = khmFilter(item);
+            break;
+          case 'stx':
             break;
         }
 
