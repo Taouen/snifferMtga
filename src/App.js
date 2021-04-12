@@ -14,7 +14,7 @@ import SetControls from './components/SetControls';
 class App extends React.Component {
   state = {
     cards: [],
-    currentSet: 'khm',
+    currentSet: 'stx',
     error: false,
     loading: true,
     mana: {
@@ -183,7 +183,6 @@ class App extends React.Component {
             mana={mana}
             setControls={setControls}
             totalMana={totalMana}
-            getLocalSetData={this.getLocalSetData}
           />
         )}
       </main>

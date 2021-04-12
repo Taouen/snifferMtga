@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export default function SetSelector(props) {
   // manually entering sets for now. Might attempt later on to fetch sets from a selected format
   const [sets] = useState([
-    { code: 'stx', name: 'Strixhaven' },
+    { code: 'sta', name: 'Strixhaven/Mystical Archive' },
     { code: 'khm', name: 'Kaldheim' },
     { code: 'znr', name: 'Zendikar Rising' },
     { code: 'm21', name: 'Core Set 2021' },

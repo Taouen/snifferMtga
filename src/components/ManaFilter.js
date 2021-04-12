@@ -20,6 +20,8 @@ export default function ColorFilter(props) {
         return G;
       case 'C':
         return C;
+      default:
+        return;
     }
   };
 
