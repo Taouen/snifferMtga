@@ -19,15 +19,29 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     });
   }
 
-  // splits mana_cost into an array of each separate mana symbol
-  const splitManaCost = mana_cost.split('}{');
-  const manaCostArray = [];
+  let pipsOnly = mana_cost.replace(/[^a-z/{}]/gi, ''); // leaves only the colored mana pips of the mana cost. The total doesn't matter here, can use item.cmc for total
 
-  splitManaCost.forEach((manaSymbol) => {
-    const tempArray = [];
-    const fixedManaSymbol = manaSymbol.replace(/[^0-9a-z/]/gi, ''); // strip {} out of each item
+  const pipsArray = pipsOnly.split('{}');
 
-    if (fixedManaSymbol.includes('/')) {
+  // following function strips the numbered symbols from the mana_cost
+  pipsArray.forEach((item) => {
+    if (item === '') {
+      pipsArray.splice(pipsArray.indexOf(item), 1);
+    }
+  });
+
+  mana_cost = pipsArray.join('');
+
+  if (mana_cost.includes('/')) {
+    // splits mana_cost into an array of each separate mana symbol
+    const splitManaCost = mana_cost.split('}{');
+
+    const manaCostArray = [];
+
+    splitManaCost.forEach((manaSymbol) => {
+      const tempArray = [];
+      const fixedManaSymbol = manaSymbol.replace(/[^a-z/]/gi, ''); // strip {} out of each item
+
       fixedManaSymbol.split('').forEach((character) => {
         if (character === '/') {
           return;
@@ -35,21 +49,18 @@ export default function canBeCast(card, mana, totalMana, setControls) {
           tempArray.push(character);
         }
       });
-    } else {
-      tempArray.push(fixedManaSymbol);
-    }
-    manaCostArray.push(tempArray);
-  });
 
-  const getCastingCosts = (arr) => {
-    return arr.reduce((a, b) => a.flatMap((d) => b.map((e) => [d, e].flat())));
-  };
+      manaCostArray.push(tempArray);
+    });
 
-  // ! issue currently is that non hybrid costs are a single array, while hybrid costs are multidimensional arrays, can't process both the same way. Try only processing hybrid cards into arrays, and set mana_cost equal to the array of possible costs. Then I can find required mana of the mana_cost normally, and do it for each item in array if it's hybrid
-
-  const castingCosts = getCastingCosts(manaCostArray);
-
-  // ? console.log(getPossibleCosts([[1], ['W', 'U'], ['W', 'U']])); required format for entering mana costs into getPossibleCosts
+    // ? console.log(getPossibleCosts([[1], ['W', 'U'], ['W', 'U']])); required format for entering mana costs into getPossibleCosts
+    const getCastingCosts = (arr) => {
+      return arr.reduce((a, b) =>
+        a.flatMap((d) => b.map((e) => [d, e].flat()))
+      );
+    };
+    mana_cost = getCastingCosts(manaCostArray);
+  }
 
   // returns an object with the quantities of each color of mana required for the card
   const findRequiredMana = (array) => {
@@ -59,15 +70,37 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     }, {});
   };
 
-  const requiredMana = findRequiredMana(
-    mana_cost.replace(/[^a-z]/gi, '').split('')
-  );
+  let hasRequiredMana;
 
-  /* mana_cost.replace(/[^a-z]/gi, '').split(''); this is an array with the color pips only from the mana cost. will turn a hybrid pip into two pips as is, will need to adjust for that */
-
-  const hasRequiredMana = Object.keys(requiredMana).every((color) => {
-    return requiredMana[color] <= mana[color];
-  });
+  if (typeof mana_cost === 'string') {
+    const requiredMana = findRequiredMana(
+      mana_cost.replace(/[^a-z]/gi, '').split('')
+    );
+    hasRequiredMana = Object.keys(requiredMana).every((color) => {
+      return requiredMana[color] <= mana[color];
+    });
+  } else {
+    const costsMet = [];
+    mana_cost.forEach((cost) => {
+      if (typeof cost === 'string') {
+        const requiredMana = {};
+        requiredMana[cost] = 1;
+        costsMet.push(
+          Object.keys(requiredMana).every((color) => {
+            return requiredMana[color] <= mana[color];
+          })
+        );
+      } else {
+        const requiredMana = findRequiredMana(cost);
+        costsMet.push(
+          Object.keys(requiredMana).every((color) => {
+            return requiredMana[color] <= mana[color];
+          })
+        );
+      }
+    });
+    hasRequiredMana = costsMet.includes(true);
+  }
 
   // ---------- Foretell cost ----------
   let foretellCost = khmFilter(card);

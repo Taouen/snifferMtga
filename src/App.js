@@ -5,11 +5,7 @@ import { PulseLoader } from 'react-spinners';
 import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
 
-/* To DO
-  
-- figure out logic for including hybrid cards when either of their colors are selected
-- 
-*/
+// TODO - fix memory leak (cancel async fetch when unmount, memory leak when changing sets before the fetch finishes)
 
 class App extends React.Component {
   state = {
