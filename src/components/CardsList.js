@@ -9,7 +9,6 @@ export default function CardsList({ cards, mana, totalMana, setControls }) {
     }
   });
   
-  console.log(filteredCards);
   
   // TODO – improve this function so that it fetches the correct face
   const getCardImage = (card) => {
