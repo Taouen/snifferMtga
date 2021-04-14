@@ -27,7 +27,7 @@ export default function ColorFilter(props) {
 
   return (
     <>
-      <div className="flex flex-row my-4 mx-0">
+      <div className="flex flex-row my-4 mx-1">
         {Object.keys(mana).map((color, index) => {
           return (
             <div key={index} className="flex flex-col items-center">
