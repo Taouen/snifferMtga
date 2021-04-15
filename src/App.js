@@ -43,9 +43,10 @@ class App extends React.Component {
                     if (item.set === 'sta') {
                       item.booster = true;
                     }
-                    const { booster, type_line, keywords } = item;
+                    const { booster, lang, type_line, keywords } = item;
                     if (
                       booster &&
+                      lang === 'en' &&
                       (type_line.includes('Instant') ||
                         (keywords && keywords.indexOf('Flash') !== -1))
                     ) {
@@ -58,9 +59,10 @@ class App extends React.Component {
                     if (item.set === 'sta') {
                       item.booster = true;
                     }
-                    const { booster, type_line, keywords } = item;
+                    const { booster, lang, type_line, keywords } = item;
                     if (
                       booster &&
+                      lang === 'en' &&
                       (type_line.includes('Instant') ||
                         (keywords && keywords.indexOf('Flash') !== -1))
                     ) {
@@ -83,7 +85,7 @@ class App extends React.Component {
           });
       };
 
-      if (!data.parent_set_code) {
+      if (data.parent_set_code) {
         const getParentSetCards = async () => {
           const parentSet = await fetch(
             `https://api.scryfall.com/sets/${data.parent_set_code}`
@@ -101,8 +103,7 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
-    // this.getLocalSetData(this.state.currentSet);
-    this.getSetData(this.state.currentSet);
+    this.getLocalSetData(this.state.currentSet);
   };
 
   getLocalSetData = (set) => {
