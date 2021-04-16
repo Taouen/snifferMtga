@@ -6,6 +6,7 @@ import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
 
 // TODO - fix memory leak (cancel async fetch when unmount, memory leak when changing sets before the fetch finishes)
+// TODO - Add a way for a user to input lands that produce more than one type of mana
 
 class App extends React.Component {
   state = {
