@@ -10,7 +10,7 @@ import SetControls from './components/SetControls';
 class App extends React.Component {
   state = {
     cards: [],
-    currentSet: 'stx',
+    currentSet: 'sta',
     error: false,
     loading: true,
     mana: {
@@ -40,9 +40,13 @@ class App extends React.Component {
               .then((data) => {
                 if (data.has_more) {
                   data.data.forEach((item) => {
-                    const { booster, type_line, keywords } = item;
+                    if (item.set === 'sta') {
+                      item.booster = true;
+                    }
+                    const { booster, lang, type_line, keywords } = item;
                     if (
                       booster &&
+                      lang === 'en' &&
                       (type_line.includes('Instant') ||
                         (keywords && keywords.indexOf('Flash') !== -1))
                     ) {
@@ -52,9 +56,13 @@ class App extends React.Component {
                   getCards(data.next_page);
                 } else {
                   data.data.forEach((item) => {
-                    const { booster, type_line, keywords } = item;
+                    if (item.set === 'sta') {
+                      item.booster = true;
+                    }
+                    const { booster, lang, type_line, keywords } = item;
                     if (
                       booster &&
+                      lang === 'en' &&
                       (type_line.includes('Instant') ||
                         (keywords && keywords.indexOf('Flash') !== -1))
                     ) {
@@ -76,7 +84,21 @@ class App extends React.Component {
             this.setState({ error: true, loading: false });
           });
       };
-      getCards(data.search_uri);
+
+      if (data.parent_set_code) {
+        const getParentSetCards = async () => {
+          const parentSet = await fetch(
+            `https://api.scryfall.com/sets/${data.parent_set_code}`
+          );
+          parentSet.json().then((data) => {
+            getCards(data.search_uri);
+          });
+        };
+        getCards(data.search_uri);
+        getParentSetCards();
+      } else {
+        getCards(data.search_uri);
+      }
     });
   };
 

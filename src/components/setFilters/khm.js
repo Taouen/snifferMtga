@@ -2,7 +2,7 @@ export default function khmFilter(card) {
   let foretellCost;
 
   const { keywords, oracle_text } = card;
-  if (keywords.some((keyword) => keyword === 'Foretell')) {
+  if (keywords && keywords.some((keyword) => keyword === 'Foretell')) {
     let costIndex;
     const arr = oracle_text.split(' ');
     arr.forEach((element, index) => {
