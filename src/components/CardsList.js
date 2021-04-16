@@ -34,12 +34,15 @@ export default function CardsList({ cards, mana, totalMana, setControls }) {
     <ul className="flex flex-wrap justify-center">
       {filteredCards.map((card) => {
         const { mana_cost, id, name } = card;
+
         return (
           <li key={id}>
             <img
               className="m-1 rounded-lg w-48 h-64"
               src={getCardImage(card)}
+
               alt={`${name} ${mana_cost === undefined ? '' : mana_cost}`}
+
             />
           </li>
         );
