@@ -87,6 +87,7 @@ class App extends React.Component {
       };
 
       if (data.parent_set_code) {
+        getCards(data.search_uri);
         const getParentSetCards = async () => {
           const parentSet = await fetch(
             `https://api.scryfall.com/sets/${data.parent_set_code}`
@@ -95,7 +96,6 @@ class App extends React.Component {
             getCards(data.search_uri);
           });
         };
-        getCards(data.search_uri);
         getParentSetCards();
       } else {
         getCards(data.search_uri);
