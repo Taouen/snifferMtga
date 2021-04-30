@@ -71,8 +71,6 @@ class App extends React.Component {
                     }
                   });
                 }
-                sessionStorage.setItem(`${set}`, JSON.stringify(cards));
-                this.setState({ cards, loading: false });
               })
               .catch((err) => {
                 console.error(err);
@@ -85,23 +83,40 @@ class App extends React.Component {
           });
       };
 
+      // get set
+      // if set has parent set {
+      // get parent set data
+      // get parent set cards
+      // push into cards array
+      // get set cards
+      // push into cards Array
+      // } else {
+      // get set cards
+      // push into cards Array
+      // }
+      // setState({cards})
+
       if (data.parent_set_code) {
-        this.getSetData(data.parent_set_code);
-        getCards(data.search_uri);
-        /* const getParentSetCards = async () => {
+        const getAllCards = async () => {
           const parentSet = await fetch(
             `https://api.scryfall.com/sets/${data.parent_set_code}`
           );
-          parentSet.json().then((data) => {
-            getCards(data.search_uri);
-          });
+          parentSet
+            .json()
+            .then((data) => {
+              getCards(data.search_uri);
+            })
+            .then(() => {
+              getCards(data.search_uri);
+            });
         };
-        getParentSetCards();
-        getCards(data.search_uri); */
+        getAllCards();
       } else {
         getCards(data.search_uri);
       }
     });
+    sessionStorage.setItem(`${set}`, JSON.stringify(cards));
+    this.setState({ cards, loading: false });
   };
 
   componentDidMount = () => {
