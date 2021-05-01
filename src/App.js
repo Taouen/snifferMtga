@@ -31,10 +31,11 @@ class App extends React.Component {
   getSetData = async (set) => {
     const cardSet = await fetch(`https://api.scryfall.com/sets/${set}`);
     const cards = [];
+    const subSet = [];
 
-    cardSet.json().then((data) => {
-      const getCards = async (uri) => {
-        await fetch(uri)
+    cardSet.json().then((setData) => {
+      const getCards = async (uri, isSubSet = false) => {
+        fetch(uri)
           .then((response) => {
             response
               .json()
@@ -51,10 +52,18 @@ class App extends React.Component {
                       (type_line.includes('Instant') ||
                         (keywords && keywords.indexOf('Flash') !== -1))
                     ) {
-                      cards.push(item);
+                      if (isSubSet) {
+                        subSet.push(item);
+                      } else {
+                        cards.push(item);
+                      }
                     }
                   });
-                  getCards(data.next_page);
+                  if (isSubSet) {
+                    getCards(data.next_page, true);
+                  } else {
+                    getCards(data.next_page);
+                  }
                 } else {
                   data.data.forEach((item) => {
                     if (item.set === 'sta') {
@@ -67,12 +76,14 @@ class App extends React.Component {
                       (type_line.includes('Instant') ||
                         (keywords && keywords.indexOf('Flash') !== -1))
                     ) {
-                      cards.push(item);
+                      if (isSubSet) {
+                        subSet.push(item);
+                      } else {
+                        cards.push(item);
+                      }
                     }
                   });
                 }
-                sessionStorage.setItem(`${set}`, JSON.stringify(cards));
-                this.setState({ cards, loading: false });
               })
               .catch((err) => {
                 console.error(err);
@@ -83,25 +94,50 @@ class App extends React.Component {
             console.error(err);
             this.setState({ error: true, loading: false });
           });
+        if (subSet.length > 0) {
+          subSet.forEach((card) => cards.push(card));
+        }
       };
 
-      if (data.parent_set_code) {
-        this.getSetData(data.parent_set_code);
-        getCards(data.search_uri);
-        /* const getParentSetCards = async () => {
+      // get set
+      // if set has parent set {
+      // get parent set data
+      // get parent set cards
+      // push into cards array
+      // get set cards
+      // push into cards Array
+      // } else {
+      // get set cards
+      // push into cards Array
+      // }
+      // setState({cards})
+
+      if (setData.parent_set_code) {
+        const getAllCards = async () => {
           const parentSet = await fetch(
-            `https://api.scryfall.com/sets/${data.parent_set_code}`
+            `https://api.scryfall.com/sets/${setData.parent_set_code}`
           );
-          parentSet.json().then((data) => {
-            getCards(data.search_uri);
-          });
+          parentSet
+            .json()
+            .then((data) => {
+              getCards(data.search_uri);
+            })
+            .then(() => {
+              getCards(setData.search_uri, true);
+            });
         };
-        getParentSetCards();
-        getCards(data.search_uri); */
+
+        getAllCards();
       } else {
-        getCards(data.search_uri);
+        getCards(setData.search_uri);
       }
     });
+
+    /*if (subSet.length > 0) {
+                subSet.forEach((card) => cards.push(card));
+              } */
+    sessionStorage.setItem(`${set}`, JSON.stringify(cards));
+    this.setState({ cards, loading: false });
   };
 
   componentDidMount = () => {
