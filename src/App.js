@@ -35,7 +35,7 @@ class App extends React.Component {
 
     cardSet.json().then((setData) => {
       const getCards = async (uri, isSubSet = false) => {
-        await fetch(uri)
+        fetch(uri)
           .then((response) => {
             response
               .json()
@@ -94,6 +94,9 @@ class App extends React.Component {
             console.error(err);
             this.setState({ error: true, loading: false });
           });
+        if (subSet.length > 0) {
+          subSet.forEach((card) => cards.push(card));
+        }
       };
 
       // get set
@@ -123,16 +126,16 @@ class App extends React.Component {
               getCards(setData.search_uri, true);
             });
         };
+
         getAllCards();
       } else {
         getCards(setData.search_uri);
       }
     });
-    // if (subSet.length > 0) {
-    // subSet.forEach((card) => cards.push(card));
-    console.log(subSet, subSet.length);
-    console.log(cards);
-    // }
+
+    /*if (subSet.length > 0) {
+                subSet.forEach((card) => cards.push(card));
+              } */
     sessionStorage.setItem(`${set}`, JSON.stringify(cards));
     this.setState({ cards, loading: false });
   };
