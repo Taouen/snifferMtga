@@ -1,9 +1,6 @@
 import React from 'react';
 import { W, U, B, R, G, C } from '../assets/manaSymbols';
 
-const buttonClasses =
-  'flex justify-center items-center text-xl my-2 mx-1 h-10 md:h-8 w-10 md:w-8 border border-gray-400 rounded-full bg-gray-200 active:bg-gray-400';
-
 export default function ColorFilter(props) {
   const { mana, handleManaChange, resetMana } = props;
   const manaSymbol = (color) => {
