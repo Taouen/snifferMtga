@@ -30,6 +30,7 @@ class App extends React.Component {
 
   getSetData = async (set) => {
     const cardSet = await fetch(`https://api.scryfall.com/sets/${set}`);
+
     const cards = [];
     let subSet = [];
 
@@ -45,9 +46,11 @@ class App extends React.Component {
                     if (item.set === 'sta') {
                       item.booster = true;
                     }
-                    const { booster, lang, type_line, keywords } = item;
+                    const { booster, lang, nonfoil, type_line, keywords } =
+                      item;
                     if (
                       booster &&
+                      nonfoil &&
                       lang === 'en' &&
                       (type_line.includes('Instant') ||
                         (keywords && keywords.indexOf('Flash') !== -1))
@@ -69,9 +72,11 @@ class App extends React.Component {
                     if (item.set === 'sta') {
                       item.booster = true;
                     }
-                    const { booster, lang, type_line, keywords } = item;
+                    const { booster, lang, nonfoil, type_line, keywords } =
+                      item;
                     if (
                       booster &&
+                      nonfoil &&
                       lang === 'en' &&
                       (type_line.includes('Instant') ||
                         (keywords && keywords.indexOf('Flash') !== -1))
@@ -94,10 +99,11 @@ class App extends React.Component {
             console.error(err);
             this.setState({ error: true, loading: false });
           });
-        if (subSet.length > 0) {
-          subSet.forEach((card) => cards.push(card));
-          subSet = [];
+
+        while (subSet.length > 0) {
+          cards.push(subSet.shift());
         }
+
         sessionStorage.setItem(`${set}`, JSON.stringify(cards));
         this.setState({ cards, loading: false });
       };
@@ -125,7 +131,8 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
-    this.getLocalSetData(this.state.currentSet);
+    this.getSetData(this.state.currentSet);
+    // this.getLocalSetData(this.state.currentSet);
   };
 
   getLocalSetData = (set) => {
@@ -175,15 +182,8 @@ class App extends React.Component {
   };
 
   render() {
-    const {
-      currentSet,
-      error,
-      setControls,
-      loading,
-      cards,
-      mana,
-      totalMana,
-    } = this.state;
+    const { currentSet, error, setControls, loading, cards, mana, totalMana } =
+      this.state;
 
     return (
       <main className="flex flex-col items-center">
