@@ -11,7 +11,7 @@ import SetControls from './components/SetControls';
 class App extends React.Component {
   state = {
     cards: [],
-    currentSet: 'sta',
+    currentSet: 'afr',
     error: false,
     loading: true,
     mana: {
@@ -35,7 +35,7 @@ class App extends React.Component {
     let subSet = [];
 
     cardSet.json().then((setData) => {
-      const getCards = async (uri, isSubSet = false) => {
+      const getCards = (uri, isSubSet = false) => {
         fetch(uri)
           .then((response) => {
             response
@@ -131,7 +131,8 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
-    this.getLocalSetData(this.state.currentSet);
+    // this.getLocalSetData(this.state.currentSet);
+    this.getSetData(this.state.currentSet);
   };
 
   getLocalSetData = (set) => {
