@@ -131,8 +131,7 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
-    // this.getLocalSetData(this.state.currentSet);
-    this.getSetData(this.state.currentSet);
+    this.getLocalSetData(this.state.currentSet);
   };
 
   getLocalSetData = (set) => {
