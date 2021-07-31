@@ -4,6 +4,7 @@ import SetSelector from './components/SetSelector';
 import { PulseLoader } from 'react-spinners';
 import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
+import * as scryfall from 'scryfall-client';
 
 // TODO - fix memory leak (cancel async fetch when unmount, memory leak when changing sets before the fetch finishes)
 // TODO - Add a way for a user to input lands that produce more than one type of mana
@@ -11,7 +12,7 @@ import SetControls from './components/SetControls';
 class App extends React.Component {
   state = {
     cards: [],
-    currentSet: 'afr',
+    currentSet: 'sta',
     error: false,
     loading: true,
     mana: {
@@ -28,106 +29,33 @@ class App extends React.Component {
     totalMana: 0,
   };
 
-  getSetData = async (set) => {
-    const cardSet = await fetch(`https://api.scryfall.com/sets/${set}`);
-
-    const cards = [];
-    let subSet = [];
-
-    cardSet.json().then((setData) => {
-      const getCards = (uri, isSubSet = false) => {
-        fetch(uri)
-          .then((response) => {
-            response
-              .json()
-              .then((data) => {
-                if (data.has_more) {
-                  data.data.forEach((item) => {
-                    if (item.set === 'sta') {
-                      item.booster = true;
-                    }
-                    const { booster, lang, nonfoil, type_line, keywords } =
-                      item;
-                    if (
-                      booster &&
-                      nonfoil &&
-                      lang === 'en' &&
-                      (type_line.includes('Instant') ||
-                        (keywords && keywords.indexOf('Flash') !== -1))
-                    ) {
-                      if (isSubSet) {
-                        subSet.push(item);
-                      } else {
-                        cards.push(item);
-                      }
-                    }
-                  });
-                  if (isSubSet) {
-                    getCards(data.next_page, true);
-                  } else {
-                    getCards(data.next_page);
-                  }
-                } else {
-                  data.data.forEach((item) => {
-                    if (item.set === 'sta') {
-                      item.booster = true;
-                    }
-                    const { booster, lang, nonfoil, type_line, keywords } =
-                      item;
-                    if (
-                      booster &&
-                      nonfoil &&
-                      lang === 'en' &&
-                      (type_line.includes('Instant') ||
-                        (keywords && keywords.indexOf('Flash') !== -1))
-                    ) {
-                      if (isSubSet) {
-                        subSet.push(item);
-                      } else {
-                        cards.push(item);
-                      }
-                    }
-                  });
-                }
-              })
-              .catch((err) => {
-                console.error(err);
-                this.setState({ error: true, loading: false });
-              });
+  getSetData = async (setCode) => {
+    const { cards } = this.state;
+    scryfall.getSet(setCode).then((set) => {
+      if (set.parent_set_code) {
+        scryfall
+          .search(
+            `set:${set.parent_set_code} (t:instant or keyword:flash) lang=en order:set unique:prints`
+          )
+          .then((list) => {
+            this.setState({ cards: list, loading: false });
           })
-          .catch((err) => {
-            console.error(err);
-            this.setState({ error: true, loading: false });
+          .then(() => {
+            scryfall.search();
           });
-
-        while (subSet.length > 0) {
-          cards.push(subSet.shift());
-        }
-
-        sessionStorage.setItem(`${set}`, JSON.stringify(cards));
-        this.setState({ cards, loading: false });
-      };
-
-      if (setData.parent_set_code) {
-        const getAllCards = async () => {
-          const parentSet = await fetch(
-            `https://api.scryfall.com/sets/${setData.parent_set_code}`
-          );
-          parentSet
-            .json()
-            .then((data) => {
-              getCards(data.search_uri);
-            })
-            .then(() => {
-              getCards(setData.search_uri, true);
-            });
-        };
-
-        getAllCards();
-      } else {
-        getCards(setData.search_uri);
       }
     });
+    scryfall
+      .search(
+        `s:${this.state.currentSet} (t:instant or keyword:flash) order:set  lang=en`
+      )
+      .then((list) => {
+        console.log(list);
+      })
+      .catch((err) => {
+        console.error(err);
+        this.setState({ error: true, loading: false });
+      });
   };
 
   componentDidMount = () => {
