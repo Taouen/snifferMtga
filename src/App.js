@@ -7,12 +7,15 @@ import SetControls from './components/SetControls';
 import * as scryfall from 'scryfall-client';
 
 // TODO - fix memory leak (cancel async fetch when unmount, memory leak when changing sets before the fetch finishes)
+
 // TODO - Add a way for a user to input lands that produce more than one type of mana
+
+// TODO - If totalMana > 1, render cards as soon as they are loaded. Currently they only render after changing the mana
 
 class App extends React.Component {
   state = {
     cards: [],
-    currentSet: 'sta',
+    currentSet: 'afr',
     error: false,
     loading: true,
     mana: {
@@ -30,37 +33,52 @@ class App extends React.Component {
   };
 
   getSetData = async (setCode) => {
-    const { cards } = this.state;
-    scryfall.getSet(setCode).then((set) => {
-      if (set.parent_set_code) {
-        scryfall
-          .search(
-            `set:${set.parent_set_code} (t:instant or keyword:flash) lang=en order:set unique:prints`
-          )
-          .then((list) => {
-            this.setState({ cards: list, loading: false });
-          })
-          .then(() => {
-            scryfall.search();
-          });
-      }
-    });
-    scryfall
-      .search(
-        `s:${this.state.currentSet} (t:instant or keyword:flash) order:set  lang=en`
-      )
-      .then((list) => {
-        console.log(list);
-      })
-      .catch((err) => {
-        console.error(err);
-        this.setState({ error: true, loading: false });
-      });
+    let cards;
+    let tempCardArray;
+
+    const set = await scryfall.getSet(setCode);
+
+    if (set.parent_set_code) {
+      tempCardArray = await scryfall
+        .search(
+          `set:${set.parent_set_code} (t:instant or keyword:flash) lang=en order:set is:nonfoil is:booster`
+        )
+        .then((list) => list)
+        .catch((err) => {
+          console.error(err);
+          this.setState({ error: true, loading: false });
+        });
+
+      const setCards = await scryfall
+        .search(
+          `set:${setCode} (t:instant or keyword:flash) lang=en order:set is:nonfoil `
+        )
+        .then((list) => list)
+        .catch((err) => {
+          console.error(err);
+          this.setState({ error: true, loading: false });
+        });
+      tempCardArray.push(...setCards);
+      cards = tempCardArray;
+    } else {
+      cards = await scryfall
+        .search(
+          `set:${setCode} (t:instant or keyword:flash) lang=en order:set is:nonfoil is:booster`
+        )
+        .then((list) => list)
+        .catch((err) => {
+          console.error(err);
+          this.setState({ error: true, loading: false });
+        });
+    }
+
+    sessionStorage.setItem(`${setCode}`, JSON.stringify(cards));
+    this.setState({ cards, loading: false });
   };
 
   componentDidMount = () => {
-    // this.getLocalSetData(this.state.currentSet);
-    this.getSetData(this.state.currentSet);
+    this.getLocalSetData(this.state.currentSet);
+    // this.getSetData(this.state.currentSet);
   };
 
   getLocalSetData = (set) => {
