@@ -10,8 +10,6 @@ import * as scryfall from 'scryfall-client';
 
 // TODO - Add a way for a user to input lands that produce more than one type of mana
 
-// TODO - If totalMana > 1, render cards as soon as they are loaded. Currently they only render after changing the mana
-
 class App extends React.Component {
   state = {
     cards: [],
@@ -78,7 +76,6 @@ class App extends React.Component {
 
   componentDidMount = () => {
     this.getLocalSetData(this.state.currentSet);
-    // this.getSetData(this.state.currentSet);
   };
 
   getLocalSetData = (set) => {
