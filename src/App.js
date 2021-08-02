@@ -78,10 +78,6 @@ class App extends React.Component {
 
   componentDidMount = () => {
     this.getLocalSetData(this.state.currentSet);
-<<<<<<< HEAD
-=======
-    // this.getSetData(this.state.currentSet);
->>>>>>> develop
   };
 
   getLocalSetData = (set) => {
