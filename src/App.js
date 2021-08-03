@@ -131,7 +131,7 @@ class App extends React.Component {
     return (
       <main className="flex flex-col items-center">
         <header className="mt-4">
-          <h1 className="text-2xl">MTGA Sniffer</h1>
+          <h1 className="text-2xl">MTGA Hand Sniffer</h1>
         </header>
         {error ? (
           <p>

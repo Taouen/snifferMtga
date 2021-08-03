@@ -1,8 +1,10 @@
 import React from 'react';
-import { W, U, B, R, G, C } from '../assets/manaSymbols';
+import { useState } from 'react';
+import { W, U, B, R, G, C, more, close } from '../assets/symbols';
 
-export default function ColorFilter(props) {
-  const { mana, handleManaChange, resetMana } = props;
+export default function ColorFilter({ mana, handleManaChange, resetMana }) {
+  const [active, setActive] = useState(false);
+
   const manaSymbol = (color) => {
     switch (color) {
       case 'W':
@@ -24,14 +26,14 @@ export default function ColorFilter(props) {
 
   return (
     <>
-      <div className="flex flex-row my-4 mx-1">
+      <div className="flex flex-row flex-wrap my-4 mx-1 justify-center">
         {Object.keys(mana).map((color, index) => {
           return (
-            <div key={index} className="flex flex-col items-center">
+            <div key={index} className="flex flex-col items-center ">
               <div className="flex flex-col justify-around">
                 <button
                   onClick={() => handleManaChange(color, 1)}
-                  className="flex flex-col items-center text-2xl px-4"
+                  className="flex flex-col items-center text-2xl px-2"
                 >
                   <span
                     className={mana[color] > 0 ? 'text-black' : 'text-gray-200'}
@@ -56,7 +58,26 @@ export default function ColorFilter(props) {
             </div>
           );
         })}
+
+        {/* Multicolor mana button */}
+
+        <div className="flex flex-col items-center ">
+          <span className="text-2xl px-4 invisible">0</span>
+          <button className="flex flex-col items-center text-2xl px-2">
+            <div className=" w-10 block" onClick={() => setActive(!active)}>
+              {active ? close : more}
+            </div>
+          </button>
+        </div>
+        <div className="flex flex-row mt-4">
+          <button
+            className="
+               invisible text-xs px-1.5 py-0.5 rounded bg-gray-100"
+            type="button"
+          ></button>
+        </div>
       </div>
+
       <button
         className="text-sm mb-4 border border-gray-400 rounded-lg px-2 py-1 bg-gray-200 active:bg-gray-400"
         type="reset"
