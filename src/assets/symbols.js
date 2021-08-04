@@ -114,3 +114,39 @@ export const close = (
     <path d="M92.12,35.79a3,3,0,0,0-4.24,0L64,59.75l-23.87-24A3,3,0,0,0,35.88,40L59.76,64,35.88,88a3,3,0,0,0,4.25,4.24L64,68.25l23.88,24A3,3,0,0,0,92.13,88L68.24,64,92.13,40A3,3,0,0,0,92.12,35.79Z" />
   </svg>
 );
+export const add = (
+  <svg
+    data-name="Livello 1"
+    id="Livello_1"
+    viewBox="0 0 128 128"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle
+      cx="64"
+      cy="64"
+      r="64"
+      stroke="none"
+      fill="#ddd"
+      stroke-miterlimit="10"
+    />
+    <path d="M90,61H67V38a3,3,0,0,0-6,0V61H38a3,3,0,0,0,0,6H61V90a3,3,0,0,0,6,0V67H90a3,3,0,0,0,0-6Z" />
+  </svg>
+);
+export const confirm = (
+  <svg
+    data-name="Livello 1"
+    id="Livello_1"
+    viewBox="0 0 128 128"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle
+      cx="64"
+      cy="64"
+      r="64"
+      stroke="none"
+      fill="#ddd"
+      stroke-miterlimit="10"
+    />
+    <path d="M87.9,42.36,50.42,79.22,40.17,68.43a3,3,0,0,0-4.35,4.13l12.35,13a3,3,0,0,0,2.12.93h.05a3,3,0,0,0,2.1-.86l39.65-39a3,3,0,1,0-4.21-4.28Z" />
+  </svg>
+);

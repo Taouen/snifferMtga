@@ -1,9 +1,9 @@
-import React from 'react';
-import { useState } from 'react';
-import { W, U, B, R, G, C, more, close } from '../assets/symbols';
+import { React, useState } from 'react';
+import { Planet } from 'react-planet';
+import { W, U, B, R, G, C, confirm, close, add } from '../assets/symbols';
 
 export default function ColorFilter({ mana, handleManaChange, resetMana }) {
-  const [active, setActive] = useState(false);
+  const [multicolorMenu, setMulticolorMenu] = useState('closed');
 
   const manaSymbol = (color) => {
     switch (color) {
@@ -23,6 +23,53 @@ export default function ColorFilter({ mana, handleManaChange, resetMana }) {
         return;
     }
   };
+
+  let planetContent;
+
+  switch (multicolorMenu) {
+    case 'closed':
+      planetContent = (
+        <div
+          style={{
+            height: 40,
+            width: 40,
+            borderRadius: '50%',
+          }}
+          onClick={() => setMulticolorMenu('pending')}
+        >
+          {add}
+        </div>
+      );
+      break;
+    case 'pending':
+      planetContent = (
+        <div
+          style={{
+            height: 40,
+            width: 40,
+            borderRadius: '50%',
+          }}
+          onClick={() => setMulticolorMenu('closed')}
+        >
+          {close}
+        </div>
+      );
+      break;
+    case 'approve':
+      planetContent = (
+        <div
+          style={{
+            height: 40,
+            width: 40,
+            borderRadius: '50%',
+          }}
+          onClick={() => setMulticolorMenu('closed')}
+        >
+          {confirm}
+        </div>
+      );
+      break;
+  }
 
   return (
     <>
@@ -63,18 +110,69 @@ export default function ColorFilter({ mana, handleManaChange, resetMana }) {
 
         <div className="flex flex-col items-center ">
           <span className="text-2xl px-4 invisible">0</span>
-          <button className="flex flex-col items-center text-2xl px-2">
-            <div className=" w-10 block" onClick={() => setActive(!active)}>
-              {active ? close : more}
+
+          <Planet
+            centerContent={planetContent}
+            rotation={150}
+            autoClose
+            orbitRadius={75}
+            hideOrbit
+          >
+            <button
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: '50%',
+              }}
+            >
+              {W}
+            </button>
+            <div
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: '50%',
+              }}
+            >
+              {U}
             </div>
-          </button>
-        </div>
-        <div className="flex flex-row mt-4">
-          <button
-            className="
-               invisible text-xs px-1.5 py-0.5 rounded bg-gray-100"
-            type="button"
-          ></button>
+            <div
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: '50%',
+              }}
+            >
+              {B}
+            </div>
+            <div
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: '50%',
+              }}
+            >
+              {R}
+            </div>
+            <div
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: '50%',
+              }}
+            >
+              {G}
+            </div>
+            <div
+              style={{
+                height: 40,
+                width: 40,
+                borderRadius: '50%',
+              }}
+            >
+              {C}
+            </div>
+          </Planet>
         </div>
       </div>
 
