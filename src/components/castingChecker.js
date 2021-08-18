@@ -73,13 +73,18 @@ export default function canBeCast(card, mana, totalMana, setControls) {
   let hasRequiredMana;
 
   if (typeof mana_cost === 'string') {
+    // For any non-hybrid mana cost
     const requiredMana = findRequiredMana(
       mana_cost.replace(/[^a-z]/gi, '').split('')
     );
     hasRequiredMana = Object.keys(requiredMana).every((color) => {
-      return requiredMana[color] <= mana[color];
+      // console.log(mana_cost, color, requiredMana[color]);
+      return (
+        requiredMana[color] <= mana[color] || requiredMana[color] <= mana['M']
+      );
     });
   } else {
+    // For hybrid mana costs, which are an array of possible costs
     const costsMet = [];
     mana_cost.forEach((cost) => {
       if (typeof cost === 'string') {
@@ -87,6 +92,7 @@ export default function canBeCast(card, mana, totalMana, setControls) {
         requiredMana[cost] = 1;
         costsMet.push(
           Object.keys(requiredMana).every((color) => {
+            console.log(mana_cost, color, requiredMana[color]);
             return requiredMana[color] <= mana[color];
           })
         );
@@ -94,6 +100,7 @@ export default function canBeCast(card, mana, totalMana, setControls) {
         const requiredMana = findRequiredMana(cost);
         costsMet.push(
           Object.keys(requiredMana).every((color) => {
+            console.log(mana_cost, color, requiredMana[color]);
             return requiredMana[color] <= mana[color];
           })
         );
@@ -113,7 +120,10 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     );
     hasRequiredForetellMana = Object.keys(requiredForetellMana).every(
       (color) => {
-        return requiredForetellMana[color] <= mana[color];
+        return (
+          requiredForetellMana[color] <= mana[color] ||
+          requiredForetellMana[color] <= mana['M']
+        );
       }
     );
     foretellCmc = convertManaCostToCmc(foretellCost);

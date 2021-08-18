@@ -23,6 +23,7 @@ class App extends React.Component {
       R: 0,
       G: 0,
       C: 0,
+      M: 0,
     },
     setControls: {
       foretold: false,
@@ -110,6 +111,7 @@ class App extends React.Component {
     if (mana[color] < 0) {
       mana[color] = 0;
     }
+
     totalMana = Object.values(mana).reduce((a, b) => a + b, 0);
     this.setState({ totalMana, mana });
   };

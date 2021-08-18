@@ -150,3 +150,37 @@ export const confirm = (
     <path d="M87.9,42.36,50.42,79.22,40.17,68.43a3,3,0,0,0-4.35,4.13l12.35,13a3,3,0,0,0,2.12.93h.05a3,3,0,0,0,2.1-.86l39.65-39a3,3,0,1,0-4.21-4.28Z" />
   </svg>
 );
+
+export const M = (
+  <svg version="1.1" xmlns="&ns_svg;" viewBox="0 0 512 512">
+    <linearGradient
+      id="XMLID_1_"
+      gradientUnits="userSpaceOnUse"
+      x1="74.9814"
+      y1="437.0195"
+      x2="437.02"
+      y2="74.9809"
+    >
+      <stop offset="0" style={{ stopColor: '#CCA651' }} />
+      <stop offset="0.1134" style={{ stopColor: '#CDA754' }} />
+      <stop offset="0.2044" style={{ stopColor: '#CFAC5E' }} />
+      <stop offset="0.2878" style={{ stopColor: '#D2B36F' }} />
+      <stop offset="0.3664" style={{ stopColor: '#D6BD87' }} />
+      <stop offset="0.4412" style={{ stopColor: '#DCCAA5' }} />
+      <stop offset="0.5" style={{ stopColor: '#E2D7C3' }} />
+      <stop offset="0.5588" style={{ stopColor: '#DCCAA5' }} />
+      <stop offset="0.6336" style={{ stopColor: '#D6BD87' }} />
+      <stop offset="0.7122" style={{ stopColor: '#D2B36F' }} />
+      <stop offset="0.7956" style={{ stopColor: '#CFAC5E' }} />
+      <stop offset="0.8866" style={{ stopColor: '#CDA754' }} />
+      <stop offset="1" style={{ stopColor: '#CCA651' }} />
+    </linearGradient>
+
+    <circle fill="url(#XMLID_1_)" cx="256" cy="256" r="256" />
+    <path
+      d="M 256 , 60.5 C 148.028 , 60.5 , 60.5 , 148.028 , 60.5 , 256 c0,107.973,87.528,195.5,195.5,195.5S451.5,363.973,451.5,256
+			C451.5,148.028,363.972,60.5,256,60.5z M256,396c-77.32,0-140-62.68-140-140c0-77.32,62.68-140,140-140
+			c77.319,0,140,62.68,140,140C396,333.32,333.319,396,256,396z"
+    />
+  </svg>
+);

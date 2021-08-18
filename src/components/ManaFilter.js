@@ -1,10 +1,7 @@
-import { React, useState } from 'react';
-import { Planet } from 'react-planet';
-import { W, U, B, R, G, C, confirm, close, add } from '../assets/symbols';
+import { W, U, B, R, G, C, M } from '../assets/symbols';
+import MulticolorMenu from './MulticolorMenu';
 
 export default function ColorFilter({ mana, handleManaChange, resetMana }) {
-  const [multicolorMenu, setMulticolorMenu] = useState('closed');
-
   const manaSymbol = (color) => {
     switch (color) {
       case 'W':
@@ -19,57 +16,12 @@ export default function ColorFilter({ mana, handleManaChange, resetMana }) {
         return G;
       case 'C':
         return C;
+      case 'M':
+        return M;
       default:
         return;
     }
   };
-
-  let planetContent;
-
-  switch (multicolorMenu) {
-    case 'closed':
-      planetContent = (
-        <div
-          style={{
-            height: 40,
-            width: 40,
-            borderRadius: '50%',
-          }}
-          onClick={() => setMulticolorMenu('pending')}
-        >
-          {add}
-        </div>
-      );
-      break;
-    case 'pending':
-      planetContent = (
-        <div
-          style={{
-            height: 40,
-            width: 40,
-            borderRadius: '50%',
-          }}
-          onClick={() => setMulticolorMenu('closed')}
-        >
-          {close}
-        </div>
-      );
-      break;
-    case 'approve':
-      planetContent = (
-        <div
-          style={{
-            height: 40,
-            width: 40,
-            borderRadius: '50%',
-          }}
-          onClick={() => setMulticolorMenu('closed')}
-        >
-          {confirm}
-        </div>
-      );
-      break;
-  }
 
   return (
     <>
@@ -111,68 +63,7 @@ export default function ColorFilter({ mana, handleManaChange, resetMana }) {
         <div className="flex flex-col items-center ">
           <span className="text-2xl px-4 invisible">0</span>
 
-          <Planet
-            centerContent={planetContent}
-            rotation={150}
-            autoClose
-            orbitRadius={75}
-            hideOrbit
-          >
-            <button
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: '50%',
-              }}
-            >
-              {W}
-            </button>
-            <div
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: '50%',
-              }}
-            >
-              {U}
-            </div>
-            <div
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: '50%',
-              }}
-            >
-              {B}
-            </div>
-            <div
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: '50%',
-              }}
-            >
-              {R}
-            </div>
-            <div
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: '50%',
-              }}
-            >
-              {G}
-            </div>
-            <div
-              style={{
-                height: 40,
-                width: 40,
-                borderRadius: '50%',
-              }}
-            >
-              {C}
-            </div>
-          </Planet>
+          <MulticolorMenu />
         </div>
       </div>
 
