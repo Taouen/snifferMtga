@@ -4,19 +4,20 @@ import convertManaCostToCmc from './cmcConverter';
 // This function checks the mana cost of a card against the available mana entered by the user and returns true if the card can be cast with the available mana and false if it cannot.
 
 export default function canBeCast(card, mana, totalMana, setControls) {
-  let { mana_cost } = card;
+  const { card_faces } = card;
+  let { mana_cost, cmc } = card;
 
-  //! This is currently not correctly showing cards with instant speed faces (ie. bonecrusher giant // stomp)
-
-  if (card.card_faces) {
-    card.card_faces.forEach((face) => {
-      if (
-        face.type_line.includes('Instant') ||
-        (face.keywords && face.keywords.includes('Flash'))
-      ) {
-        mana_cost = face.mana_cost;
-      }
-    });
+  if (card_faces.length > 1) {
+    // for double faced cards (or cards like Adventure cards from Throne of Eldraine), finds which face is the instant speed one, and sets mana_cost and cmc to the values for that face only.
+    if (
+      card_faces[0].type_line.includes('Instant') ||
+      (card_faces[0].keywords && card_faces[0].keywords.includes('Flash'))
+    ) {
+      mana_cost = card_faces[0].mana_cost;
+    } else {
+      mana_cost = card_faces[1].mana_cost;
+    }
+    cmc = mana_cost.replace(/[^0-9a-z]/gi, '').split('').length;
   }
 
   let pipsOnly = mana_cost.replace(/[^a-z/{}]/gi, ''); // leaves only the colored mana pips of the mana cost. The total doesn't matter here, can use item.cmc for total
@@ -92,7 +93,6 @@ export default function canBeCast(card, mana, totalMana, setControls) {
         requiredMana[cost] = 1;
         costsMet.push(
           Object.keys(requiredMana).every((color) => {
-            console.log(mana_cost, color, requiredMana[color]);
             return requiredMana[color] <= mana[color];
           })
         );
@@ -100,7 +100,6 @@ export default function canBeCast(card, mana, totalMana, setControls) {
         const requiredMana = findRequiredMana(cost);
         costsMet.push(
           Object.keys(requiredMana).every((color) => {
-            console.log(mana_cost, color, requiredMana[color]);
             return requiredMana[color] <= mana[color];
           })
         );
@@ -130,7 +129,7 @@ export default function canBeCast(card, mana, totalMana, setControls) {
   } // ----------------------------------
 
   return (
-    (card.cmc <= totalMana && hasRequiredMana) ||
+    (cmc <= totalMana && hasRequiredMana) ||
     (setControls.foretold &&
       hasRequiredForetellMana &&
       foretellCmc <= totalMana)
