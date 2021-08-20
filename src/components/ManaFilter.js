@@ -24,8 +24,8 @@ export default function ColorFilter({ mana, handleManaChange, resetMana }) {
   };
 
   return (
-    <>
-      <div className="flex flex-row flex-wrap my-4 mx-1 justify-center">
+    <div className="flex flex-col items-center">
+      <div className="flex flex-row  my-4 mx-1 justify-center">
         {Object.keys(mana).map((color, index) => {
           return (
             <div key={index} className="flex flex-col items-center ">
@@ -59,12 +59,10 @@ export default function ColorFilter({ mana, handleManaChange, resetMana }) {
         })}
 
         {/* Multicolor mana button */}
+      </div>
 
-        <div className="flex flex-col items-center ">
-          <span className="text-2xl px-4 invisible">0</span>
-
-          <MulticolorMenu />
-        </div>
+      <div className="flex flex-col items-center relative w-full h-10">
+        <MulticolorMenu />
       </div>
 
       <button
@@ -74,6 +72,6 @@ export default function ColorFilter({ mana, handleManaChange, resetMana }) {
       >
         Clear all
       </button>
-    </>
+    </div>
   );
 }

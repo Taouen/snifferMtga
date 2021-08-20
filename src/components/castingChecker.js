@@ -79,7 +79,6 @@ export default function canBeCast(card, mana, totalMana, setControls) {
       mana_cost.replace(/[^a-z]/gi, '').split('')
     );
     hasRequiredMana = Object.keys(requiredMana).every((color) => {
-      // console.log(mana_cost, color, requiredMana[color]);
       return (
         requiredMana[color] <= mana[color] || requiredMana[color] <= mana['M']
       );
