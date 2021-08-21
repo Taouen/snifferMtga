@@ -131,7 +131,7 @@ class App extends React.Component {
       this.state;
 
     return (
-      <main className="flex flex-col items-center">
+      <main className="flex flex-col items-center ">
         <header className="mt-4">
           <h1 className="text-2xl">MTGA Hand Sniffer</h1>
         </header>

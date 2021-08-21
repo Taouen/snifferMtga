@@ -25,7 +25,7 @@ export default function ColorFilter({ mana, handleManaChange, resetMana }) {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="flex flex-row  my-4 mx-1 justify-center">
+      <div className="flex flex-row  mt-4 mx-1 justify-center">
         {Object.keys(mana).map((color, index) => {
           return (
             <div key={index} className="flex flex-col items-center ">
@@ -61,12 +61,12 @@ export default function ColorFilter({ mana, handleManaChange, resetMana }) {
         {/* Multicolor mana button */}
       </div>
 
-      <div className="flex flex-col items-center relative w-full h-10">
+      <div className="flex flex-row  my-4 mx-1 justify-center">
         <MulticolorMenu />
       </div>
 
       <button
-        className="text-sm mb-4 border border-gray-400 rounded-lg px-2 py-1 bg-gray-200 active:bg-gray-400"
+        className="text-sm border border-gray-400 rounded-lg px-2 py-1 bg-gray-200 active:bg-gray-400"
         type="reset"
         onClick={() => resetMana()}
       >

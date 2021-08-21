@@ -33,12 +33,12 @@ const MulticolorMenu = () => {
   ]);
 
   let planetContent;
-
+  const planetClassNames = 'rounded-full cursor-pointer w-10';
   switch (multicolorMenu) {
     case 'closed':
       planetContent = (
         <div
-          className="rounded-full w-10"
+          className={planetClassNames}
           onClick={() => setMulticolorMenu('open')}
         >
           {add}
@@ -48,7 +48,7 @@ const MulticolorMenu = () => {
     case 'open':
       planetContent = (
         <div
-          className="rounded-full w-10"
+          className={planetClassNames}
           onClick={() => setMulticolorMenu('closed')}
         >
           {close}
@@ -58,8 +58,10 @@ const MulticolorMenu = () => {
     case 'pending':
       planetContent = (
         <div
-          className="rounded-full w-10"
-          onClick={() => setMulticolorMenu('closed')}
+          className={planetClassNames}
+          onClick={() => {
+            handleConfirm();
+          }}
         >
           {confirm}
         </div>
@@ -73,14 +75,23 @@ const MulticolorMenu = () => {
     const mana = [...colors];
     mana[index].selected = !mana[index].selected;
     setColors(mana);
+    setMulticolorMenu('pending');
+  };
+
+  const handleConfirm = () => {
+    const mana = [...colors];
+    setMulticolorMenu('closed');
+    mana.forEach((color) => {
+      color.selected = false;
+    });
+    setColors(mana);
   };
 
   return (
-    <>
+    <div className="w-10 h-10">
       <Planet
         centerContent={planetContent}
         rotation={145}
-        className="absolute -left-10"
         onClose={() => {
           setMulticolorMenu('closed');
         }}
@@ -96,16 +107,18 @@ const MulticolorMenu = () => {
               boxShadow: '0 0 0.5rem',
             }}
             onClick={() => {
-              // write handler function, move colors to state variable.
               handleSelectMana(index);
-              setMulticolorMenu('pending');
             }}
           >
             <div
               className={`${
-                selected ? 'relative z-10 w-full h-full rounded-full' : 'hidden'
+                selected
+                  ? 'w-10 h-10 rounded-full opacity-70 absolute'
+                  : 'hidden'
               }`}
-            ></div>
+            >
+              {confirm}
+            </div>
             {symbol}
           </button>
         ))}
@@ -117,7 +130,7 @@ const MulticolorMenu = () => {
             : 'hidden'
         }`}
       ></div>
-    </>
+    </div>
   );
 };
 
