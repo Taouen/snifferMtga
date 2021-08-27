@@ -110,28 +110,18 @@ class App extends React.Component {
     const mana = { ...this.state.mana };
     const multicolorMana = { ...this.state.multicolorMana };
     let totalMana = { ...this.state.totalMana };
-    mana[color] += change;
-    if (mana[color] < 0) {
-      mana[color] = 0;
+
+    if (color.length > 1) {
+      multicolorMana[color] += change;
+      if (multicolorMana[color] < 0) {
+        multicolorMana[color] = 0;
+      }
+    } else {
+      mana[color] += change;
+      if (mana[color] < 0) {
+        mana[color] = 0;
+      }
     }
-
-    totalMana =
-      Object.values(mana).reduce((a, b) => a + b, 0) +
-      Object.values(multicolorMana).reduce((a, b) => a + b, 0);
-    this.setState({ totalMana, mana });
-  };
-
-  handleMulticolorManaChange = (color, change) => {
-    const mana = { ...this.state.mana };
-    const multicolorMana = { ...this.state.multicolorMana };
-    let totalMana = { ...this.state.totalMana };
-    multicolorMana[color] = multicolorMana[color]
-      ? multicolorMana[color] + change
-      : 1;
-    if (multicolorMana[color] < 0) {
-      multicolorMana[color] = 0;
-    }
-
     totalMana =
       Object.values(mana).reduce((a, b) => a + b, 0) +
       Object.values(multicolorMana).reduce((a, b) => a + b, 0);

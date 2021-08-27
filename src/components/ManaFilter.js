@@ -33,7 +33,7 @@ export default function ManaFilter({
             <ManaButton
               key={color}
               color={color}
-              mana={mana}
+              mana={multicolorMana}
               symbol={getManaSymbol(color)}
               handleManaChange={handleManaChange}
             />

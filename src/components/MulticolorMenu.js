@@ -67,7 +67,7 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
     if (
       Object.values(mana)
         .map((object) => object.selected)
-        .includes(true)
+        .filter((item) => item === true).length >= 2
     ) {
       setMenuStatus('pending');
     } else {
@@ -97,7 +97,7 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
   };
 
   return (
-    <div className="w-10 h-10">
+    <div className="w-10 h-10 mx-2">
       <Planet
         centerContent={planetContent}
         rotation={145}
