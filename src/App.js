@@ -6,9 +6,10 @@ import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
 import * as scryfall from 'scryfall-client';
 
-// TODO - fix memory leak (cancel async fetch when unmount, memory leak when changing sets before the fetch finishes)
-
 // TODO - Add a way for a user to input lands that produce more than one type of mana
+// TODO - when confirming multicolor mana, create a new mana button
+// TODO - Change set filters to ability filters, as it's usually a specific mechanic anyway, so it makes them reusable.
+// ! BUG - castingChecker.js - showing multicolor spells when only 1 Multicolor mana available (ie 1C 1M allows a card with a UR cost to be displayed)
 
 class App extends React.Component {
   state = {
@@ -17,14 +18,15 @@ class App extends React.Component {
     error: false,
     loading: true,
     mana: {
-      W: 0,
       U: 0,
       B: 0,
       R: 0,
       G: 0,
+      W: 0,
       C: 0,
       M: 0,
     },
+    multicolorMana: {},
     setControls: {
       foretold: false,
     },
@@ -99,36 +101,72 @@ class App extends React.Component {
   };
 
   handleSetControlsChange = (name, value) => {
-    const setControls = this.state.setControls;
+    const setControls = { ...this.state.setControls };
     setControls[name] = value;
     this.setState({ setControls });
   };
 
   handleManaChange = (color, change) => {
-    const { mana } = this.state;
-    let { totalMana } = this.state;
+    const mana = { ...this.state.mana };
+    const multicolorMana = { ...this.state.multicolorMana };
+    let totalMana = { ...this.state.totalMana };
     mana[color] += change;
     if (mana[color] < 0) {
       mana[color] = 0;
     }
 
-    totalMana = Object.values(mana).reduce((a, b) => a + b, 0);
+    totalMana =
+      Object.values(mana).reduce((a, b) => a + b, 0) +
+      Object.values(multicolorMana).reduce((a, b) => a + b, 0);
     this.setState({ totalMana, mana });
   };
 
+  handleMulticolorManaChange = (color, change) => {
+    const mana = { ...this.state.mana };
+    const multicolorMana = { ...this.state.multicolorMana };
+    let totalMana = { ...this.state.totalMana };
+    multicolorMana[color] = multicolorMana[color]
+      ? multicolorMana[color] + change
+      : 1;
+    if (multicolorMana[color] < 0) {
+      multicolorMana[color] = 0;
+    }
+
+    totalMana =
+      Object.values(mana).reduce((a, b) => a + b, 0) +
+      Object.values(multicolorMana).reduce((a, b) => a + b, 0);
+    this.setState({ totalMana, mana });
+  };
+
+  addMulticolorManaSource = (color) => {
+    const multicolorMana = { ...this.state.multicolorMana };
+    multicolorMana[color] = 0;
+    this.setState({ multicolorMana });
+  };
+
   resetMana = () => {
-    const { mana } = this.state;
-    let { totalMana } = this.state;
+    const mana = { ...this.state.mana };
+
+    let { totalMana, multicolorMana } = this.state;
     for (let color in mana) {
       mana[color] = 0;
     }
+    multicolorMana = {};
     totalMana = 0;
-    this.setState({ mana, totalMana });
+    this.setState({ mana, multicolorMana, totalMana });
   };
 
   render() {
-    const { currentSet, error, setControls, loading, cards, mana, totalMana } =
-      this.state;
+    const {
+      currentSet,
+      error,
+      setControls,
+      loading,
+      cards,
+      mana,
+      multicolorMana,
+      totalMana,
+    } = this.state;
 
     return (
       <main className="flex flex-col items-center ">
@@ -151,6 +189,9 @@ class App extends React.Component {
               mana={mana}
               handleManaChange={this.handleManaChange}
               resetMana={this.resetMana}
+              multicolorMana={multicolorMana}
+              handleMulticolorManaChange={this.handleMulticolorManaChange}
+              addMulticolorManaSource={this.addMulticolorManaSource}
             />
             <SetControls
               currentSet={currentSet}

@@ -1,46 +1,26 @@
 import { React, useState } from 'react';
+import { sortMana } from './helperFunctions.js';
 import { Planet } from 'react-planet';
-import {
-  W,
-  U,
-  B,
-  R,
-  G,
-  WU,
-  UB,
-  BR,
-  RG,
-  GW,
-  WB,
-  BG,
-  GU,
-  UR,
-  RW,
-  confirm,
-  close,
-  add,
-} from '../assets/symbols';
+import { W, U, B, R, G, confirm, close, add } from '../assets/symbols';
 
-const MulticolorMenu = () => {
-  const colorsForNewLand = [];
-  const [multicolorMenu, setMulticolorMenu] = useState('closed');
-  const [colors, setColors] = useState([
-    { value: 'W', symbol: W, selected: false },
-    { value: 'U', symbol: U, selected: false },
-    { value: 'B', symbol: B, selected: false },
-    { value: 'R', symbol: R, selected: false },
-    { value: 'G', symbol: G, selected: false },
-  ]);
+const MulticolorMenu = ({ addMulticolorManaSource }) => {
+  const [colorsForNewLand, setColorsForNewLand] = useState([]);
+  const [menuStatus, setMenuStatus] = useState('closed');
+  const [colors, setColors] = useState({
+    W: { value: 'W', symbol: W, selected: false },
+    U: { value: 'U', symbol: U, selected: false },
+    B: { value: 'B', symbol: B, selected: false },
+    R: { value: 'R', symbol: R, selected: false },
+    G: { value: 'G', symbol: G, selected: false },
+  });
 
   let planetContent;
   const planetClassNames = 'rounded-full cursor-pointer w-10';
-  switch (multicolorMenu) {
+
+  switch (menuStatus) {
     case 'closed':
       planetContent = (
-        <div
-          className={planetClassNames}
-          onClick={() => setMulticolorMenu('open')}
-        >
+        <div className={planetClassNames} onClick={() => setMenuStatus('open')}>
           {add}
         </div>
       );
@@ -49,7 +29,7 @@ const MulticolorMenu = () => {
       planetContent = (
         <div
           className={planetClassNames}
-          onClick={() => setMulticolorMenu('closed')}
+          onClick={() => setMenuStatus('closed')}
         >
           {close}
         </div>
@@ -71,20 +51,49 @@ const MulticolorMenu = () => {
       return null;
   }
 
-  const handleSelectMana = (index) => {
-    const mana = [...colors];
-    mana[index].selected = !mana[index].selected;
+  const handleSelectMana = (key) => {
+    const mana = { ...colors };
+    const colorsAdded = [...colorsForNewLand];
+    const { value } = mana[key];
+
+    mana[key].selected = !mana[key].selected;
+
+    if (colorsAdded.includes(value)) {
+      colorsAdded.splice(colorsAdded.indexOf(value), 1);
+    } else {
+      colorsAdded.push(value);
+    }
+
+    if (
+      Object.values(mana)
+        .map((object) => object.selected)
+        .includes(true)
+    ) {
+      setMenuStatus('pending');
+    } else {
+      setMenuStatus('open');
+    }
+
     setColors(mana);
-    setMulticolorMenu('pending');
+    setColorsForNewLand(colorsAdded);
+  };
+
+  const handleClose = () => {
+    setColors((prevState) => {
+      for (let color in prevState) {
+        prevState[color].selected = false;
+      }
+      return prevState;
+    });
+    setMenuStatus('closed');
+    setColorsForNewLand([]);
   };
 
   const handleConfirm = () => {
-    const mana = [...colors];
-    setMulticolorMenu('closed');
-    mana.forEach((color) => {
-      color.selected = false;
-    });
-    setColors(mana);
+    const colorsSelected = [...colorsForNewLand];
+    colorsSelected.sort(sortMana);
+    addMulticolorManaSource(colorsSelected.join(''));
+    handleClose();
   };
 
   return (
@@ -93,13 +102,13 @@ const MulticolorMenu = () => {
         centerContent={planetContent}
         rotation={145}
         onClose={() => {
-          setMulticolorMenu('closed');
+          handleClose();
         }}
         autoClose
         orbitRadius={75}
         hideOrbit
       >
-        {colors.map(({ value, symbol, selected }, index) => (
+        {Object.entries(colors).map(([key, { value, selected, symbol }]) => (
           <button
             key={value}
             className="rounded-full w-10 h-10"
@@ -107,7 +116,7 @@ const MulticolorMenu = () => {
               boxShadow: '0 0 0.5rem',
             }}
             onClick={() => {
-              handleSelectMana(index);
+              handleSelectMana(key);
             }}
           >
             <div
@@ -125,7 +134,7 @@ const MulticolorMenu = () => {
       </Planet>
       <div
         className={`${
-          multicolorMenu === 'open' || multicolorMenu === 'pending'
+          menuStatus === 'open' || menuStatus === 'pending'
             ? 'absolute top-0 left-0 w-screen h-screen bg-black bg-opacity-40'
             : 'hidden'
         }`}
