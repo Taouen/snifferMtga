@@ -133,6 +133,9 @@ class App extends React.Component {
     let { totalMana } = this.state;
     for (let color in mana) {
       mana[color] = 0;
+      if (color.length > 1) {
+        delete mana[color];
+      }
     }
 
     totalMana = 0;

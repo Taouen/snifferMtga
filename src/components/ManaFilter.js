@@ -4,7 +4,6 @@ import MulticolorMenu from './MulticolorMenu';
 
 export default function ManaFilter({
   mana,
-  multicolorMana,
   handleManaChange,
   addMulticolorManaSource,
   resetMana,
@@ -29,7 +28,7 @@ export default function ManaFilter({
       </div>
 
       {/* Multicolor Mana buttons */}
-      <div className="flex flex-row  my-4 mx-1 justify-center">
+      <div className="flex flex-row  my-4 mx-1 justify-center items-center">
         {Object.keys(mana).map((color) => {
           if (color.length > 1) {
             return (
