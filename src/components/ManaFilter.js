@@ -14,30 +14,34 @@ export default function ManaFilter({
     <div className="flex flex-col items-center">
       <div className="flex flex-row  mt-4 mx-1 justify-center">
         {Object.keys(mana).map((color) => {
-          return (
-            <ManaButton
-              key={color}
-              color={color}
-              mana={mana}
-              symbol={getManaSymbol(color)}
-              handleManaChange={handleManaChange}
-            />
-          );
+          if (color.length === 1) {
+            return (
+              <ManaButton
+                key={color}
+                color={color}
+                mana={mana}
+                symbol={getManaSymbol(color)}
+                handleManaChange={handleManaChange}
+              />
+            );
+          }
         })}
       </div>
 
-      {/* Multicolr Mana buttons */}
+      {/* Multicolor Mana buttons */}
       <div className="flex flex-row  my-4 mx-1 justify-center">
-        {Object.keys(multicolorMana).map((color) => {
-          return (
-            <ManaButton
-              key={color}
-              color={color}
-              mana={multicolorMana}
-              symbol={getManaSymbol(color)}
-              handleManaChange={handleManaChange}
-            />
-          );
+        {Object.keys(mana).map((color) => {
+          if (color.length > 1) {
+            return (
+              <ManaButton
+                key={color}
+                color={color}
+                mana={mana}
+                symbol={getManaSymbol(color)}
+                handleManaChange={handleManaChange}
+              />
+            );
+          }
         })}
         <MulticolorMenu addMulticolorManaSource={addMulticolorManaSource} />
       </div>

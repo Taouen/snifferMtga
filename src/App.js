@@ -6,10 +6,12 @@ import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
 import * as scryfall from 'scryfall-client';
 
-// TODO - Add a way for a user to input lands that produce more than one type of mana
-// TODO - when confirming multicolor mana, create a new mana button
-// TODO - Change set filters to ability filters, as it's usually a specific mechanic anyway, so it makes them reusable.
 // ! BUG - castingChecker.js - showing multicolor spells when only 1 Multicolor mana available (ie 1C 1M allows a card with a UR cost to be displayed)
+// TODO - Add a way for a user to input lands that produce more than one type of mana
+// TODO - Change set filters to ability filters, as it's usually a specific mechanic anyway, so it makes them reusable.
+// TODO - add Cycling to ability filters
+// TODO - add user filters (ie. show only cards with mv=3)
+// TODO - add phyrexian mana to mana filter
 
 class App extends React.Component {
   state = {
@@ -26,7 +28,6 @@ class App extends React.Component {
       C: 0,
       M: 0,
     },
-    multicolorMana: {},
     setControls: {
       foretold: false,
     },
@@ -108,42 +109,34 @@ class App extends React.Component {
 
   handleManaChange = (color, change) => {
     const mana = { ...this.state.mana };
-    const multicolorMana = { ...this.state.multicolorMana };
     let totalMana = { ...this.state.totalMana };
 
-    if (color.length > 1) {
-      multicolorMana[color] += change;
-      if (multicolorMana[color] < 0) {
-        multicolorMana[color] = 0;
-      }
-    } else {
-      mana[color] += change;
-      if (mana[color] < 0) {
-        mana[color] = 0;
-      }
+    mana[color] += change;
+    if (mana[color] < 0) {
+      mana[color] = 0;
     }
-    totalMana =
-      Object.values(mana).reduce((a, b) => a + b, 0) +
-      Object.values(multicolorMana).reduce((a, b) => a + b, 0);
+
+    totalMana = Object.values(mana).reduce((a, b) => a + b, 0);
+
     this.setState({ totalMana, mana });
   };
 
   addMulticolorManaSource = (color) => {
-    const multicolorMana = { ...this.state.multicolorMana };
-    multicolorMana[color] = 0;
-    this.setState({ multicolorMana });
+    const mana = { ...this.state.mana };
+    mana[color] = 0;
+    this.setState({ mana });
   };
 
   resetMana = () => {
     const mana = { ...this.state.mana };
 
-    let { totalMana, multicolorMana } = this.state;
+    let { totalMana } = this.state;
     for (let color in mana) {
       mana[color] = 0;
     }
-    multicolorMana = {};
+
     totalMana = 0;
-    this.setState({ mana, multicolorMana, totalMana });
+    this.setState({ mana, totalMana });
   };
 
   render() {

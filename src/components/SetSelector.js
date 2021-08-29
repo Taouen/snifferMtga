@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 export default function SetSelector(props) {
   // manually entering sets for now. Might attempt later on to fetch sets from a selected format
   const [sets] = useState([
-    { code: 'afr', name: 'Adventures in the Forgotten Realms'},
+    { code: 'mid', name: 'Innistrad: Midnight Hunt' },
+    { code: 'afr', name: 'Adventures in the Forgotten Realms' },
     { code: 'sta', name: 'Strixhaven' }, // This has set code STA because the fetch function will find the parent set cards based off the sub set codes
     { code: 'khm', name: 'Kaldheim' },
     { code: 'znr', name: 'Zendikar Rising' },
