@@ -20,11 +20,11 @@ class App extends React.Component {
     error: false,
     loading: true,
     mana: {
+      W: 0,
       U: 0,
       B: 0,
       R: 0,
       G: 0,
-      W: 0,
       C: 0,
       M: 0,
     },
@@ -127,9 +127,18 @@ class App extends React.Component {
     this.setState({ mana });
   };
 
+  clearMana = () => {
+    const mana = { ...this.state.mana };
+    let { totalMana } = this.state;
+    for (let color in mana) {
+      mana[color] = 0;
+    }
+    totalMana = 0;
+    this.setState({ mana, totalMana });
+  };
+
   resetMana = () => {
     const mana = { ...this.state.mana };
-
     let { totalMana } = this.state;
     for (let color in mana) {
       mana[color] = 0;
@@ -137,22 +146,13 @@ class App extends React.Component {
         delete mana[color];
       }
     }
-
     totalMana = 0;
     this.setState({ mana, totalMana });
   };
 
   render() {
-    const {
-      currentSet,
-      error,
-      setControls,
-      loading,
-      cards,
-      mana,
-      multicolorMana,
-      totalMana,
-    } = this.state;
+    const { currentSet, error, setControls, loading, cards, mana, totalMana } =
+      this.state;
 
     return (
       <main className="flex flex-col items-center ">
@@ -174,8 +174,8 @@ class App extends React.Component {
             <ManaFilter
               mana={mana}
               handleManaChange={this.handleManaChange}
+              clearMana={this.clearMana}
               resetMana={this.resetMana}
-              multicolorMana={multicolorMana}
               handleMulticolorManaChange={this.handleMulticolorManaChange}
               addMulticolorManaSource={this.addMulticolorManaSource}
             />
