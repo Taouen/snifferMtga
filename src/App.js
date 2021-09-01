@@ -123,7 +123,10 @@ class App extends React.Component {
 
   addMulticolorManaSource = (color) => {
     const mana = { ...this.state.mana };
-    mana[color] = 0;
+    mana[color] = {
+      value: 0,
+      colors: color.split(),
+    };
     this.setState({ mana });
   };
 
