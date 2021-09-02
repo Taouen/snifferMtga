@@ -81,7 +81,8 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     );
     hasRequiredMana = Object.keys(requiredMana).every((color) => {
       return (
-        requiredMana[color] <= mana[color] || requiredMana[color] <= mana['M']
+        requiredMana[color] <= mana[color].value ||
+        requiredMana[color] <= mana['M'].value
       );
     });
   } else {
@@ -95,8 +96,8 @@ export default function canBeCast(card, mana, totalMana, setControls) {
         costsMet.push(
           Object.keys(requiredMana).every((color) => {
             return (
-              requiredMana[color] <= mana[color] ||
-              requiredMana[color] <= mana['M']
+              requiredMana[color] <= mana[color].value ||
+              requiredMana[color] <= mana['M'].value
             );
           })
         );
@@ -105,8 +106,8 @@ export default function canBeCast(card, mana, totalMana, setControls) {
         costsMet.push(
           Object.keys(requiredMana).every((color) => {
             return (
-              requiredMana[color] <= mana[color] ||
-              requiredMana[color] <= mana['M']
+              requiredMana[color] <= mana[color].value ||
+              requiredMana[color] <= mana['M'].value
             );
           })
         );
@@ -127,8 +128,8 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     hasRequiredForetellMana = Object.keys(requiredForetellMana).every(
       (color) => {
         return (
-          requiredForetellMana[color] <= mana[color] ||
-          requiredForetellMana[color] <= mana['M']
+          requiredForetellMana[color] <= mana[color].value ||
+          requiredForetellMana[color] <= mana['M'].value
         );
       }
     );

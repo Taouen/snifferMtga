@@ -20,13 +20,13 @@ class App extends React.Component {
     error: false,
     loading: true,
     mana: {
-      W: 0,
-      U: 0,
-      B: 0,
-      R: 0,
-      G: 0,
-      C: 0,
-      M: 0,
+      W: { value: 0, colors: ['W'] },
+      U: { value: 0, colors: ['U'] },
+      B: { value: 0, colors: ['B'] },
+      R: { value: 0, colors: ['R'] },
+      G: { value: 0, colors: ['G'] },
+      C: { value: 0, colors: ['C'] },
+      M: { value: 0, colors: ['M'] },
     },
     setControls: {
       foretold: false,
@@ -109,15 +109,16 @@ class App extends React.Component {
 
   handleManaChange = (color, change) => {
     const mana = { ...this.state.mana };
-    let totalMana = { ...this.state.totalMana };
+    let { totalMana } = this.state;
 
-    mana[color] += change;
-    if (mana[color] < 0) {
-      mana[color] = 0;
+    mana[color].value += change;
+    if (mana[color].value < 0) {
+      mana[color].value = 0;
     }
 
-    totalMana = Object.values(mana).reduce((a, b) => a + b, 0);
-
+    for (let color in mana) {
+      totalMana += mana[color].value;
+    }
     this.setState({ totalMana, mana });
   };
 
@@ -134,7 +135,7 @@ class App extends React.Component {
     const mana = { ...this.state.mana };
     let { totalMana } = this.state;
     for (let color in mana) {
-      mana[color] = 0;
+      mana[color].value = 0;
     }
     totalMana = 0;
     this.setState({ mana, totalMana });
@@ -144,7 +145,7 @@ class App extends React.Component {
     const mana = { ...this.state.mana };
     let { totalMana } = this.state;
     for (let color in mana) {
-      mana[color] = 0;
+      mana[color].value = 0;
       if (color.length > 1) {
         delete mana[color];
       }
