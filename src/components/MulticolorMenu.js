@@ -67,7 +67,10 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
     if (
       Object.values(mana)
         .map((object) => object.selected)
-        .filter((item) => item === true).length >= 2
+        .filter((item) => item === true).length >= 2 &&
+      Object.values(mana)
+        .map((object) => object.selected)
+        .filter((item) => item === true).length <= 4
     ) {
       setMenuStatus('pending');
     } else {
