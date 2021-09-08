@@ -74,17 +74,33 @@ export default function canBeCast(card, mana, totalMana, setControls) {
 
   let hasRequiredMana;
 
+  // for each color, check first single color lands (mana.color.length === 1), for available mana. If it is there, use the available amount (decrement the available amount by the required amount). If not, move on to dual, then tri, and finally 4 color lands, before finally using multicolor mana.
+
   if (typeof mana_cost === 'string') {
     // For any non-hybrid mana cost
     const requiredMana = findRequiredMana(
       mana_cost.replace(/[^a-z]/gi, '').split('')
     );
-    hasRequiredMana = Object.keys(requiredMana).every((color) => {
-      return (
-        requiredMana[color] <= mana[color].value ||
-        requiredMana[color] <= mana['M'].value
-      );
-    });
+    const sortedByColorsProduced = Object.entries(mana).sort(
+      (a, b) => a[1].colors.length - b[1].colors.length
+    );
+
+    for (const color in requiredMana) {
+      sortedByColorsProduced.forEach((manaSource) => {
+        if (manaSource[1].value === 0) return;
+
+        if (manaSource[1].colors.includes(color)) {
+          if (manaSource[1].value >= requiredMana[color]) {
+            requiredMana[color] = 0;
+          } else {
+            requiredMana[color] -= manaSource[1].value;
+          }
+        }
+      });
+    }
+
+    hasRequiredMana =
+      Object.values(requiredMana).reduce((a, b) => a + b, 0) === 0;
   } else {
     // For hybrid mana costs (which is an array of possible costs)
     const costsMet = [];

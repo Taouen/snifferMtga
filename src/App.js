@@ -25,8 +25,8 @@ class App extends React.Component {
       B: { value: 0, colors: ['B'] },
       R: { value: 0, colors: ['R'] },
       G: { value: 0, colors: ['G'] },
-      C: { value: 0, colors: ['C'] },
-      M: { value: 0, colors: ['M'] },
+      C: { value: 0, colors: [] },
+      M: { value: 0, colors: ['W', 'U', 'B', 'R', 'G'] },
     },
     setControls: {
       foretold: false,
@@ -109,49 +109,47 @@ class App extends React.Component {
 
   handleManaChange = (color, change) => {
     const mana = { ...this.state.mana };
-    let { totalMana } = this.state;
+    let total = this.state.totalMana;
 
     mana[color].value += change;
     if (mana[color].value < 0) {
       mana[color].value = 0;
     }
 
-    for (let color in mana) {
-      totalMana += mana[color].value;
-    }
-    this.setState({ totalMana, mana });
+    total += change;
+    this.setState({ totalMana: total, mana });
   };
 
   addMulticolorManaSource = (color) => {
     const mana = { ...this.state.mana };
     mana[color] = {
       value: 0,
-      colors: color.split(),
+      colors: color.split(''),
     };
     this.setState({ mana });
   };
 
   clearMana = () => {
     const mana = { ...this.state.mana };
-    let { totalMana } = this.state;
+    let total = this.state.totalMana;
     for (let color in mana) {
       mana[color].value = 0;
     }
-    totalMana = 0;
-    this.setState({ mana, totalMana });
+    total = 0;
+    this.setState({ mana, totalMana: total });
   };
 
   resetMana = () => {
     const mana = { ...this.state.mana };
-    let { totalMana } = this.state;
+    let total = this.state.totalMana;
     for (let color in mana) {
       mana[color].value = 0;
       if (color.length > 1) {
         delete mana[color];
       }
     }
-    totalMana = 0;
-    this.setState({ mana, totalMana });
+    total = 0;
+    this.setState({ mana, totalMana: total });
   };
 
   render() {
