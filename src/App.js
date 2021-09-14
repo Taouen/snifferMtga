@@ -6,17 +6,16 @@ import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
 import * as scryfall from 'scryfall-client';
 
-// ! BUG - castingChecker.js - showing multicolor spells when only 1 Multicolor mana available (ie 1C 1M allows a card with a UR cost to be displayed)
-// TODO - Add a way for a user to input lands that produce more than one type of mana
 // TODO - Change set filters to ability filters, as it's usually a specific mechanic anyway, so it makes them reusable.
 // TODO - add Cycling to ability filters
 // TODO - add user filters (ie. show only cards with mv=3)
 // TODO - add phyrexian mana to mana filter
+// TODO - figure out how to account for X mana
 
 class App extends React.Component {
   state = {
     cards: [],
-    currentSet: 'afr',
+    currentSet: 'sta',
     error: false,
     loading: true,
     mana: {
@@ -25,8 +24,8 @@ class App extends React.Component {
       B: { value: 0, colors: ['B'] },
       R: { value: 0, colors: ['R'] },
       G: { value: 0, colors: ['G'] },
-      C: { value: 0, colors: [] },
       M: { value: 0, colors: ['W', 'U', 'B', 'R', 'G'] },
+      C: { value: 0, colors: [] },
     },
     setControls: {
       foretold: false,
