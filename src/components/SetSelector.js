@@ -21,15 +21,15 @@ export default function SetSelector(props) {
 
   return (
     <select
-      className="text-base w-9/12 h-8 border border-gray-400 rounded mt-4 text-center"
+      className="text-base w-9/12 max-w-xs h-8 border border-gray-400 rounded mt-4 text-center"
       id="set"
       value={props.currentSet}
       onChange={props.handleSetChange}
     >
-      {sets.map((set, index) => {
+      {sets.map(({ code, name }) => {
         return (
-          <option key={index} value={set.code}>
-            {set.name}
+          <option key={code} value={code}>
+            {name}
           </option>
         );
       })}

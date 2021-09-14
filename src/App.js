@@ -6,25 +6,20 @@ import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
 import * as scryfall from 'scryfall-client';
 
-// TODO - fix memory leak (cancel async fetch when unmount, memory leak when changing sets before the fetch finishes)
-
-// TODO - Add a way for a user to input lands that produce more than one type of mana
-
-// TODO - If totalMana > 1, render cards as soon as they are loaded. Currently they only render after changing the mana
-
 class App extends React.Component {
   state = {
     cards: [],
-    currentSet: 'afr',
+    currentSet: 'mid',
     error: false,
     loading: true,
     mana: {
-      W: 0,
-      U: 0,
-      B: 0,
-      R: 0,
-      G: 0,
-      C: 0,
+      W: { value: 0, colors: ['W'] },
+      U: { value: 0, colors: ['U'] },
+      B: { value: 0, colors: ['B'] },
+      R: { value: 0, colors: ['R'] },
+      G: { value: 0, colors: ['G'] },
+      M: { value: 0, colors: ['W', 'U', 'B', 'R', 'G'] },
+      C: { value: 0, colors: [] },
     },
     setControls: {
       foretold: false,
@@ -100,30 +95,54 @@ class App extends React.Component {
   };
 
   handleSetControlsChange = (name, value) => {
-    const setControls = this.state.setControls;
+    const setControls = { ...this.state.setControls };
     setControls[name] = value;
     this.setState({ setControls });
   };
 
   handleManaChange = (color, change) => {
-    const { mana } = this.state;
-    let { totalMana } = this.state;
-    mana[color] += change;
-    if (mana[color] < 0) {
-      mana[color] = 0;
+    const mana = { ...this.state.mana };
+    let total = this.state.totalMana;
+
+    mana[color].value += change;
+    if (mana[color].value < 0) {
+      mana[color].value = 0;
     }
-    totalMana = Object.values(mana).reduce((a, b) => a + b, 0);
-    this.setState({ totalMana, mana });
+
+    total += change;
+    this.setState({ totalMana: total, mana });
+  };
+
+  addMulticolorManaSource = (color) => {
+    const mana = { ...this.state.mana };
+    mana[color] = {
+      value: 0,
+      colors: color.split(''),
+    };
+    this.setState({ mana });
+  };
+
+  clearMana = () => {
+    const mana = { ...this.state.mana };
+    let total = this.state.totalMana;
+    for (let color in mana) {
+      mana[color].value = 0;
+    }
+    total = 0;
+    this.setState({ mana, totalMana: total });
   };
 
   resetMana = () => {
-    const { mana } = this.state;
-    let { totalMana } = this.state;
+    const mana = { ...this.state.mana };
+    let total = this.state.totalMana;
     for (let color in mana) {
-      mana[color] = 0;
+      mana[color].value = 0;
+      if (color.length > 1) {
+        delete mana[color];
+      }
     }
-    totalMana = 0;
-    this.setState({ mana, totalMana });
+    total = 0;
+    this.setState({ mana, totalMana: total });
   };
 
   render() {
@@ -131,9 +150,9 @@ class App extends React.Component {
       this.state;
 
     return (
-      <main className="flex flex-col items-center">
+      <main className="flex flex-col items-center ">
         <header className="mt-4">
-          <h1 className="text-2xl">MTGA Sniffer</h1>
+          <h1 className="text-2xl">MTGA Hand Sniffer</h1>
         </header>
         {error ? (
           <p>
@@ -150,7 +169,10 @@ class App extends React.Component {
             <ManaFilter
               mana={mana}
               handleManaChange={this.handleManaChange}
+              clearMana={this.clearMana}
               resetMana={this.resetMana}
+              handleMulticolorManaChange={this.handleMulticolorManaChange}
+              addMulticolorManaSource={this.addMulticolorManaSource}
             />
             <SetControls
               currentSet={currentSet}

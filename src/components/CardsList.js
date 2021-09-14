@@ -9,8 +9,6 @@ export default function CardsList({ cards, mana, totalMana, setControls }) {
     }
   });
 
-  // ! getCardImage still does not correctly show adventure cards (ie. Bonecrusher Giant // Stomp)
-
   const getCardImage = (card) => {
     const { image_uris, card_faces } = card;
     if (image_uris) return image_uris.normal;
@@ -40,9 +38,7 @@ export default function CardsList({ cards, mana, totalMana, setControls }) {
             <img
               className="m-1 rounded-lg w-48 h-64"
               src={getCardImage(card)}
-
               alt={`${name} ${mana_cost === undefined ? '' : mana_cost}`}
-
             />
           </li>
         );
