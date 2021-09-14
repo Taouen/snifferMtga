@@ -6,12 +6,6 @@ import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
 import * as scryfall from 'scryfall-client';
 
-// TODO - Change set filters to ability filters, as it's usually a specific mechanic anyway, so it makes them reusable.
-// TODO - add Cycling to ability filters
-// TODO - add user filters (ie. show only cards with mv=3)
-// TODO - add phyrexian mana to mana filter
-// TODO - figure out how to account for X mana
-
 class App extends React.Component {
   state = {
     cards: [],
