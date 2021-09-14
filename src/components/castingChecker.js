@@ -74,41 +74,138 @@ export default function canBeCast(card, mana, totalMana, setControls) {
 
   let hasRequiredMana;
 
+  // for each color, check first single color lands (mana.color.length === 1), for available mana. If it is there, use the available amount (decrement the available amount by the required amount). If not, move on to dual, then tri, and finally 4 color lands, before finally using multicolor mana.
+
+  const sortedByColorsProduced = Object.entries(
+    JSON.parse(JSON.stringify(mana))
+  ).sort((a, b) => a[1].colors.length - b[1].colors.length);
+
   if (typeof mana_cost === 'string') {
     // For any non-hybrid mana cost
     const requiredMana = findRequiredMana(
       mana_cost.replace(/[^a-z]/gi, '').split('')
     );
-    hasRequiredMana = Object.keys(requiredMana).every((color) => {
-      return (
-        requiredMana[color] <= mana[color] || requiredMana[color] <= mana['M']
-      );
+
+    const requiredManaArray = Object.entries(requiredMana);
+
+    requiredManaArray.forEach((color) => {
+      sortedByColorsProduced.forEach((manaSource) => {
+        // color[1] is the value for the current required mana color
+        // manaSource[1].colors is the array of colors the current source produces
+
+        if (manaSource[1].value === 0 || color[1] === 0) return;
+
+        // color[0] is the color (W, U, B, R, or G)
+        // manaSource[1].value is the current amount of available mana for the current source
+
+        if (manaSource[1].colors.includes(color[0])) {
+          if (manaSource[1].value >= color[1]) {
+            manaSource[1].value -= 1;
+            if (manaSource[1].value < 0) {
+              manaSource[1].value = 0;
+            }
+            color[1] = 0;
+          } else {
+            color[1] -= manaSource[1].value;
+            if (color[1] < 0) {
+              color[1] = 0;
+            }
+            manaSource[1].value = 0;
+          }
+        }
+      });
     });
+
+    hasRequiredMana =
+      Object.values(Object.fromEntries(requiredManaArray)).reduce(
+        (a, b) => a + b,
+        0
+      ) === 0;
   } else {
     // For hybrid mana costs (which is an array of possible costs)
     const costsMet = [];
     mana_cost.forEach((cost) => {
       if (typeof cost === 'string') {
         // If the cost is a single pip, it will be a string value
+
+        // Create a required mana object from the single pip
         const requiredMana = {};
         requiredMana[cost] = 1;
+
+        const requiredManaArray = Object.entries(requiredMana);
+
+        requiredManaArray.forEach((color) => {
+          sortedByColorsProduced.forEach((manaSource) => {
+            // color[1] is the value for the current required mana color
+            // manaSource[1].colors is the array of colors the current source produces
+
+            if (manaSource[1].value === 0 || color[1] === 0) return;
+
+            // color[0] is the color (W, U, B, R, or G)
+            // manaSource[1].value is the current amount of available mana for the current source
+
+            if (manaSource[1].colors.includes(color[0])) {
+              if (manaSource[1].value >= color[1]) {
+                manaSource[1].value -= 1;
+                if (manaSource[1].value < 0) {
+                  manaSource[1].value = 0;
+                }
+                color[1] = 0;
+              } else {
+                color[1] -= manaSource[1].value;
+                if (color[1] < 0) {
+                  color[1] = 0;
+                }
+                manaSource[1].value = 0;
+              }
+            }
+          });
+        });
+
         costsMet.push(
-          Object.keys(requiredMana).every((color) => {
-            return (
-              requiredMana[color] <= mana[color] ||
-              requiredMana[color] <= mana['M']
-            );
-          })
+          Object.values(Object.fromEntries(requiredManaArray)).reduce(
+            (a, b) => a + b,
+            0
+          ) === 0
         );
       } else {
         const requiredMana = findRequiredMana(cost);
+        const requiredManaArray = Object.entries(requiredMana);
+        const sources = JSON.parse(JSON.stringify(sortedByColorsProduced)); // Need to make a copy here so as not to change the original from cost to cost (ie for a U/R U/R cost, with a U/R hybrid mana, the first cost in the array [U,U] uses the hybrid mana, and then it has a 0 value for the rest of the costs)
+
+        requiredManaArray.forEach((color) => {
+          sources.forEach((manaSource) => {
+            // color[1] is the value for the current required mana color
+            // manaSource[1].colors is the array of colors the current source produces
+
+            if (manaSource[1].value === 0 || color[1] === 0) return;
+
+            // color[0] is the color (W, U, B, R, or G)
+            // manaSource[1].value is the current amount of available mana for the current source
+
+            if (manaSource[1].colors.includes(color[0])) {
+              if (manaSource[1].value >= color[1]) {
+                manaSource[1].value -= 1;
+                if (manaSource[1].value < 0) {
+                  manaSource[1].value = 0;
+                }
+                color[1] = 0;
+              } else {
+                color[1] -= manaSource[1].value;
+                if (color[1] < 0) {
+                  color[1] = 0;
+                }
+                manaSource[1].value = 0;
+              }
+            }
+          });
+        });
+
         costsMet.push(
-          Object.keys(requiredMana).every((color) => {
-            return (
-              requiredMana[color] <= mana[color] ||
-              requiredMana[color] <= mana['M']
-            );
-          })
+          Object.values(Object.fromEntries(requiredManaArray)).reduce(
+            (a, b) => a + b,
+            0
+          ) === 0
         );
       }
     });
@@ -127,8 +224,8 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     hasRequiredForetellMana = Object.keys(requiredForetellMana).every(
       (color) => {
         return (
-          requiredForetellMana[color] <= mana[color] ||
-          requiredForetellMana[color] <= mana['M']
+          requiredForetellMana[color] <= mana[color].value ||
+          requiredForetellMana[color] <= mana['M'].value
         );
       }
     );

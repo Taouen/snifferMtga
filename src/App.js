@@ -6,27 +6,26 @@ import ManaFilter from './components/ManaFilter';
 import SetControls from './components/SetControls';
 import * as scryfall from 'scryfall-client';
 
-// ! BUG - castingChecker.js - showing multicolor spells when only 1 Multicolor mana available (ie 1C 1M allows a card with a UR cost to be displayed)
-// TODO - Add a way for a user to input lands that produce more than one type of mana
 // TODO - Change set filters to ability filters, as it's usually a specific mechanic anyway, so it makes them reusable.
 // TODO - add Cycling to ability filters
 // TODO - add user filters (ie. show only cards with mv=3)
 // TODO - add phyrexian mana to mana filter
+// TODO - figure out how to account for X mana
 
 class App extends React.Component {
   state = {
     cards: [],
-    currentSet: 'afr',
+    currentSet: 'mid',
     error: false,
     loading: true,
     mana: {
-      W: 0,
-      U: 0,
-      B: 0,
-      R: 0,
-      G: 0,
-      C: 0,
-      M: 0,
+      W: { value: 0, colors: ['W'] },
+      U: { value: 0, colors: ['U'] },
+      B: { value: 0, colors: ['B'] },
+      R: { value: 0, colors: ['R'] },
+      G: { value: 0, colors: ['G'] },
+      M: { value: 0, colors: ['W', 'U', 'B', 'R', 'G'] },
+      C: { value: 0, colors: [] },
     },
     setControls: {
       foretold: false,
@@ -109,48 +108,47 @@ class App extends React.Component {
 
   handleManaChange = (color, change) => {
     const mana = { ...this.state.mana };
-    let totalMana = { ...this.state.totalMana };
+    let total = this.state.totalMana;
 
-    mana[color] += change;
-    if (mana[color] < 0) {
-      mana[color] = 0;
+    mana[color].value += change;
+    if (mana[color].value < 0) {
+      mana[color].value = 0;
     }
 
-    totalMana = Object.values(mana).reduce((a, b) => a + b, 0);
-
-    this.setState({ totalMana, mana });
+    total += change;
+    this.setState({ totalMana: total, mana });
   };
 
   addMulticolorManaSource = (color) => {
     const mana = { ...this.state.mana };
     mana[color] = {
       value: 0,
-      colors: color.split(),
+      colors: color.split(''),
     };
     this.setState({ mana });
   };
 
   clearMana = () => {
     const mana = { ...this.state.mana };
-    let { totalMana } = this.state;
+    let total = this.state.totalMana;
     for (let color in mana) {
-      mana[color] = 0;
+      mana[color].value = 0;
     }
-    totalMana = 0;
-    this.setState({ mana, totalMana });
+    total = 0;
+    this.setState({ mana, totalMana: total });
   };
 
   resetMana = () => {
     const mana = { ...this.state.mana };
-    let { totalMana } = this.state;
+    let total = this.state.totalMana;
     for (let color in mana) {
-      mana[color] = 0;
+      mana[color].value = 0;
       if (color.length > 1) {
         delete mana[color];
       }
     }
-    totalMana = 0;
-    this.setState({ mana, totalMana });
+    total = 0;
+    this.setState({ mana, totalMana: total });
   };
 
   render() {
