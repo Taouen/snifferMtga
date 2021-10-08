@@ -7,11 +7,11 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
   const [colorsForNewLand, setColorsForNewLand] = useState([]);
   const [menuStatus, setMenuStatus] = useState('closed');
   const [colors, setColors] = useState({
-    W: { value: 'W', symbol: W, selected: false },
-    U: { value: 'U', symbol: U, selected: false },
-    B: { value: 'B', symbol: B, selected: false },
-    R: { value: 'R', symbol: R, selected: false },
-    G: { value: 'G', symbol: G, selected: false },
+    W: { value: 'W', symbol: W, selected: false, sortOrder: 1 },
+    U: { value: 'U', symbol: U, selected: false, sortOrder: 2 },
+    B: { value: 'B', symbol: B, selected: false, sortOrder: 3 },
+    R: { value: 'R', symbol: R, selected: false, sortOrder: 4 },
+    G: { value: 'G', symbol: G, selected: false, sortOrder: 5 },
   });
 
   let planetContent;
@@ -54,15 +54,16 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
   const handleSelectMana = (key) => {
     const mana = { ...colors };
     const colorsAdded = [...colorsForNewLand];
-    const { value } = mana[key];
 
     mana[key].selected = !mana[key].selected;
 
-    if (colorsAdded.includes(value)) {
-      colorsAdded.splice(colorsAdded.indexOf(value), 1);
+    if (colorsAdded.includes(mana[key])) {
+      colorsAdded.splice(colorsAdded.indexOf(mana[key]), 1);
     } else {
-      colorsAdded.push(value);
+      colorsAdded.push(mana[key]);
     }
+
+    colorsAdded.sort((a, b) => (a.sortOrder > b.sortOrder ? 1 : -1));
 
     if (
       Object.values(mana)
@@ -94,8 +95,11 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
 
   const handleConfirm = () => {
     const colorsSelected = [...colorsForNewLand];
-    colorsSelected.sort(sortMana);
-    addMulticolorManaSource(colorsSelected.join(''));
+    const colorsAddedValues = [];
+    colorsSelected.forEach((color) => {
+      colorsAddedValues.push(color.value);
+    });
+    addMulticolorManaSource(colorsAddedValues.join(''));
     handleClose();
   };
 

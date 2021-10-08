@@ -1,59 +1,61 @@
-import {
-  W,
-  U,
-  B,
-  R,
-  G,
-  C,
-  M,
-  WU,
-  UB,
-  BR,
-  RG,
-  GW,
-  WB,
-  BG,
-  GU,
-  UR,
-  RW,
-} from '../assets/symbols';
+import * as symbols from '../assets/symbols';
 
 export const getManaSymbol = (color) => {
   switch (color) {
     case 'W':
-      return W;
+      return symbols.W;
     case 'U':
-      return U;
+      return symbols.U;
     case 'B':
-      return B;
+      return symbols.B;
     case 'R':
-      return R;
+      return symbols.R;
     case 'G':
-      return G;
+      return symbols.G;
     case 'C':
-      return C;
+      return symbols.C;
     case 'M':
-      return M;
+      return symbols.M;
     case 'WU':
-      return WU;
+      return symbols.WU;
     case 'UB':
-      return UB;
+      return symbols.UB;
     case 'BR':
-      return BR;
+      return symbols.BR;
     case 'RG':
-      return RG;
-    case 'GW':
-      return GW;
+      return symbols.RG;
+    case 'WG':
+      return symbols.WG;
     case 'WB':
-      return WB;
+      return symbols.WB;
     case 'BG':
-      return BG;
-    case 'GU':
-      return GU;
+      return symbols.BG;
+    case 'UG':
+      return symbols.UG;
     case 'UR':
-      return UR;
-    case 'RW':
-      return RW;
+      return symbols.UR;
+    case 'WR':
+      return symbols.WR;
+    case 'WUB':
+      return symbols.WUB;
+    case 'UBR':
+      return symbols.UBR;
+    case 'BRG':
+      return symbols.BRG;
+    case 'WRG':
+      return symbols.WRG;
+    case 'WUG':
+      return symbols.WUG;
+    case 'WBR':
+      return symbols.WBR;
+    case 'WBG':
+      return symbols.WBG;
+    case 'UBG':
+      return symbols.UBG;
+    case 'URG':
+      return symbols.URG;
+    case 'WUR':
+      return symbols.WUR;
     default:
       return;
   }
