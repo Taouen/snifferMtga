@@ -56,6 +56,16 @@ export const getManaSymbol = (color) => {
       return symbols.URG;
     case 'WUR':
       return symbols.WUR;
+    case 'WUBR':
+      return symbols.WUBR;
+    case 'UBRG':
+      return symbols.UBRG;
+    case 'WBRG':
+      return symbols.WBRG;
+    case 'WURG':
+      return symbols.WURG;
+    case 'WUBG':
+      return symbols.WUBG;
     default:
       return;
   }
