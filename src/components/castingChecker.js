@@ -17,11 +17,11 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     } else {
       mana_cost = card_faces[1].mana_cost;
     }
-    cmc = mana_cost.replace(/[^0-9a-z]/gi, '').split('').length; // card face objects dont contain their own cmc properties.
+    cmc = mana_cost.replace(/[^0-9a-w][^yz]/gi, '').split('').length; // card face objects dont contain their own cmc properties. (stripping out X from the cost also, as x is treated as 0)
   }
 
-  // Remove all but colored pips from the mana cost
-  const pipsArray = mana_cost.replace(/[^a-z/{}]/gi, '').split('{}');
+  // Remove all but colored pips from the mana cost (also strips X out of the cost)
+  const pipsArray = mana_cost.replace(/[^a-w/{}][^yz]/gi, '').split('{}');
 
   // strip the numbered symbols from the mana_cost
   pipsArray.forEach((item) => {
