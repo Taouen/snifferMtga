@@ -3,7 +3,7 @@ import { Planet } from 'react-planet';
 import { W, U, B, R, G, confirm, close, add } from '../assets/symbols';
 
 const MulticolorMenu = ({ addMulticolorManaSource }) => {
-  const [colorsForNewLand, setColorsForNewLand] = useState([]);
+  const [colorsForNewManaSource, setColorsForNewManaSource] = useState([]);
   const [menuStatus, setMenuStatus] = useState('closed');
   const [colors, setColors] = useState({
     W: { value: 'W', symbol: W, selected: false, sortOrder: 1 },
@@ -52,7 +52,7 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
 
   const handleSelectMana = (key) => {
     const mana = { ...colors };
-    const colorsAdded = [...colorsForNewLand];
+    const colorsAdded = [...colorsForNewManaSource];
 
     mana[key].selected = !mana[key].selected;
 
@@ -80,7 +80,7 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
     }
 
     setColors(mana);
-    setColorsForNewLand(colorsAdded);
+    setColorsForNewManaSource(colorsAdded);
   };
 
   const handleClose = () => {
@@ -91,11 +91,11 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
       return prevState;
     });
     setMenuStatus('closed');
-    setColorsForNewLand([]);
+    setColorsForNewManaSource([]);
   };
 
   const handleConfirm = () => {
-    const colorsSelected = [...colorsForNewLand];
+    const colorsSelected = [...colorsForNewManaSource];
     const colorsAddedValues = [];
     colorsSelected.forEach((color) => {
       colorsAddedValues.push(color.value);
