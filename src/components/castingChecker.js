@@ -100,7 +100,7 @@ export default function canBeCast(card, mana, totalMana, setControls) {
 
         if (manaSource[1].colors.includes(color[0])) {
           if (manaSource[1].value >= color[1]) {
-            manaSource[1].value -= 1;
+            manaSource[1].value -= color[1];
             if (manaSource[1].value < 0) {
               manaSource[1].value = 0;
             }
@@ -146,7 +146,7 @@ export default function canBeCast(card, mana, totalMana, setControls) {
 
             if (manaSource[1].colors.includes(color[0])) {
               if (manaSource[1].value >= color[1]) {
-                manaSource[1].value -= 1;
+                manaSource[1].value -= color[1];
                 if (manaSource[1].value < 0) {
                   manaSource[1].value = 0;
                 }
@@ -185,7 +185,7 @@ export default function canBeCast(card, mana, totalMana, setControls) {
 
             if (manaSource[1].colors.includes(color[0])) {
               if (manaSource[1].value >= color[1]) {
-                manaSource[1].value -= 1;
+                manaSource[1].value -= color[1];
                 if (manaSource[1].value < 0) {
                   manaSource[1].value = 0;
                 }
