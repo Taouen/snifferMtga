@@ -93,7 +93,7 @@ export default function canBeCast(card, mana, totalMana, setControls) {
         // color[1] is the value for the current required mana color
         // manaSource[1].colors is the array of colors the current source produces
 
-        if (manaSource[1].value === 0 || color[1] === 0) return;
+        if (manaSource[1].value === 0 || color[1] === 0) return; // ends loop if the source has no mana available, or if the required color has been fulfilled.
 
         // color[0] is the color (W, U, B, R, or G)
         // manaSource[1].value is the current amount of available mana for the current source
@@ -139,7 +139,7 @@ export default function canBeCast(card, mana, totalMana, setControls) {
             // color[1] is the value for the current required mana color
             // manaSource[1].colors is the array of colors the current source produces
 
-            if (manaSource[1].value === 0 || color[1] === 0) return;
+            if (manaSource[1].value === 0 || color[1] === 0) return; // ends loop if the source has no mana available, or if the required color has been fulfilled.
 
             // color[0] is the color (W, U, B, R, or G)
             // manaSource[1].value is the current amount of available mana for the current source
@@ -178,7 +178,7 @@ export default function canBeCast(card, mana, totalMana, setControls) {
             // color[1] is the value for the current required mana color
             // manaSource[1].colors is the array of colors the current source produces
 
-            if (manaSource[1].value === 0 || color[1] === 0) return;
+            if (manaSource[1].value === 0 || color[1] === 0) return; // ends loop if the source has no mana available, or if the required color has been fulfilled.
 
             // color[0] is the color (W, U, B, R, or G)
             // manaSource[1].value is the current amount of available mana for the current source
