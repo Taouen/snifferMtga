@@ -1,10 +1,9 @@
 import { React, useState } from 'react';
-import { sortMana } from './helperFunctions.js';
 import { Planet } from 'react-planet';
 import { W, U, B, R, G, confirm, close, add } from '../assets/symbols';
 
 const MulticolorMenu = ({ addMulticolorManaSource }) => {
-  const [colorsForNewLand, setColorsForNewLand] = useState([]);
+  const [colorsForNewManaSource, setColorsForNewManaSource] = useState([]);
   const [menuStatus, setMenuStatus] = useState('closed');
   const [colors, setColors] = useState({
     W: { value: 'W', symbol: W, selected: false, sortOrder: 1 },
@@ -53,7 +52,7 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
 
   const handleSelectMana = (key) => {
     const mana = { ...colors };
-    const colorsAdded = [...colorsForNewLand];
+    const colorsAdded = [...colorsForNewManaSource];
 
     mana[key].selected = !mana[key].selected;
 
@@ -63,9 +62,11 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
       colorsAdded.push(mana[key]);
     }
 
+    // Sort the colors in WUBRG order. This is required so that the order matches that of the mana symbol being fetched for the button.
     colorsAdded.sort((a, b) => (a.sortOrder > b.sortOrder ? 1 : -1));
 
     if (
+      // If the number of colors selected is >= 2, and <= 4, then the user can create a new button. All the single colors and 5 color (multicolor) are already available.
       Object.values(mana)
         .map((object) => object.selected)
         .filter((item) => item === true).length >= 2 &&
@@ -79,7 +80,7 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
     }
 
     setColors(mana);
-    setColorsForNewLand(colorsAdded);
+    setColorsForNewManaSource(colorsAdded);
   };
 
   const handleClose = () => {
@@ -90,11 +91,11 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
       return prevState;
     });
     setMenuStatus('closed');
-    setColorsForNewLand([]);
+    setColorsForNewManaSource([]);
   };
 
   const handleConfirm = () => {
-    const colorsSelected = [...colorsForNewLand];
+    const colorsSelected = [...colorsForNewManaSource];
     const colorsAddedValues = [];
     colorsSelected.forEach((color) => {
       colorsAddedValues.push(color.value);
@@ -140,6 +141,7 @@ const MulticolorMenu = ({ addMulticolorManaSource }) => {
         ))}
       </Planet>
       <div
+        // Backdrop
         className={`${
           menuStatus === 'open' || menuStatus === 'pending'
             ? 'absolute top-0 left-0 w-screen h-screen bg-black bg-opacity-40'
