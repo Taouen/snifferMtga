@@ -44,12 +44,9 @@ export default function canBeCast(card, mana, totalMana, setControls) {
   mana_cost = processManaCost(mana_cost);
 
   // For mana costs with Hybrid mana
-  if (mana_cost.includes('/')) {
-    // split mana_cost into an array of each separate mana symbol
-    const splitManaCost = mana_cost.split('}{');
-
+  if (mana_cost.some((value) => value.includes('/'))) {
     const manaCostArray = [];
-    splitManaCost.forEach((manaSymbol) => {
+    mana_cost.forEach((manaSymbol) => {
       // Split each mana symbol into an array of possible colored mana (ie. {U/B} creates [U,B]), and push it to the manaCostArray
 
       const tempArray = [];
