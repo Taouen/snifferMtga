@@ -3,6 +3,27 @@ import convertManaCostToCmc from './cmcConverter';
 
 // This function checks the mana cost of a card against the available mana entered by the user and returns true if the card can be cast with the available mana and false if it cannot.
 
+// return an object with the quantities of each color of mana required for the card (ie. mana_cost === 3RR returns {r:2})
+export const findRequiredMana = (array) => {
+  return array.reduce((color, quantity) => {
+    color[quantity] = color[quantity] ? color[quantity] + 1 : 1;
+    return color;
+  }, {});
+};
+
+export const processManaCost = (cost) => {
+  // Remove generic costs from the mana cost, and return colored pips as an array
+  // ex: '{X}{1}{U}{U}' becomes ['U', 'U']
+  // ex: '{2}{R/G}{R/G}' becomes ['R/G', 'R/G']
+  const pipsArray = cost
+    .replace(/[^a-wy-z/{}]/gi, '')
+    .replace(/}{/gi, '} {')
+    .replace(/[{}]/gi, '')
+    .split(' ');
+
+  return pipsArray.filter((item) => item !== '');
+};
+
 export default function canBeCast(card, mana, totalMana, setControls) {
   const { card_faces } = card;
   let { mana_cost, cmc } = card;
@@ -20,17 +41,7 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     cmc = mana_cost.replace(/[^0-9a-w][^yz]/gi, '').split('').length; // card face objects dont contain their own cmc properties. (stripping out X from the cost also, as x is treated as 0)
   }
 
-  // Remove all but colored pips from the mana cost (also strips X out of the cost)
-  const pipsArray = mana_cost.replace(/[^a-w/{}][^yz]/gi, '').split('{}');
-
-  // strip the numbered symbols from the mana_cost
-  pipsArray.forEach((item) => {
-    if (item === '') {
-      pipsArray.splice(pipsArray.indexOf(item), 1);
-    }
-  });
-
-  mana_cost = pipsArray.join('');
+  mana_cost = processManaCost(mana_cost);
 
   // For mana costs with Hybrid mana
   if (mana_cost.includes('/')) {
@@ -63,14 +74,6 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     // Set mana_cost equal to an array of possible casting costs (ie. {U/R}{U/R} returns as [[U,U], [U/R], [R/U], [R/R]]). U/R and R/U are functionally the same, but as they will both return true for the same available mana, there is no point in removing them from the array.
     mana_cost = getCastingCosts(manaCostArray);
   }
-
-  // return an object with the quantities of each color of mana required for the card (ie. mana_cost === 3RR returns {r:2})
-  const findRequiredMana = (array) => {
-    return array.reduce((color, quantity) => {
-      color[quantity] = color[quantity] ? color[quantity] + 1 : 1;
-      return color;
-    }, {});
-  };
 
   let hasRequiredMana;
 
