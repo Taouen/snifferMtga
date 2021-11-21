@@ -24,6 +24,31 @@ export const processManaCost = (cost) => {
   return pipsArray.filter((item) => item !== '');
 };
 
+export const processHybridMana = (cost) => {
+  const manaCostArray = [];
+  cost.forEach((manaSymbol) => {
+    // Returns an array of possible casting costs (ie. {U/R}{U/R} returns as [[U,U], [U/R], [R/U], [R/R]]). U/R and R/U are functionally the same, but as they will both return true for the same available mana, there is no point in removing them from the array.
+
+    const tempArray = [];
+
+    manaSymbol.split('').forEach((character) => {
+      // Split each hybrid mana symbol into an array of possible colored mana (ie. {U/B} creates [U,B]), and push it to the manaCostArray
+      if (character === '/') {
+        return;
+      } else {
+        tempArray.push(character);
+      }
+    });
+    manaCostArray.push(tempArray);
+  });
+
+  const getCastingCosts = (arr) => {
+    return arr.reduce((a, b) => a.flatMap((d) => b.map((e) => [d, e].flat())));
+  };
+
+  return getCastingCosts(manaCostArray);
+};
+
 export default function canBeCast(card, mana, totalMana, setControls) {
   const { card_faces } = card;
   let { mana_cost, cmc } = card;
@@ -38,38 +63,14 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     } else {
       mana_cost = card_faces[1].mana_cost;
     }
-    cmc = mana_cost.replace(/[^0-9a-w][^yz]/gi, '').split('').length; // card face objects dont contain their own cmc properties. (stripping out X from the cost also, as x is treated as 0)
+    cmc = mana_cost.replace(/[^0-9a-wy-z]/gi, '').split('').length; // creating cmc from mana_cost because card face objects dont have their own cmc properties. (stripping out X from the cost also, as x is treated as 0)
   }
 
   mana_cost = processManaCost(mana_cost);
 
   // For mana costs with Hybrid mana
   if (mana_cost.some((value) => value.includes('/'))) {
-    const manaCostArray = [];
-    mana_cost.forEach((manaSymbol) => {
-      // Split each mana symbol into an array of possible colored mana (ie. {U/B} creates [U,B]), and push it to the manaCostArray
-
-      const tempArray = [];
-      const fixedManaSymbol = manaSymbol.replace(/[^a-z/]/gi, ''); // strip {} out of each item
-
-      fixedManaSymbol.split('').forEach((character) => {
-        if (character === '/') {
-          return;
-        } else {
-          tempArray.push(character);
-        }
-      });
-      manaCostArray.push(tempArray);
-    });
-
-    const getCastingCosts = (arr) => {
-      return arr.reduce((a, b) =>
-        a.flatMap((d) => b.map((e) => [d, e].flat()))
-      );
-    };
-
-    // Set mana_cost equal to an array of possible casting costs (ie. {U/R}{U/R} returns as [[U,U], [U/R], [R/U], [R/R]]). U/R and R/U are functionally the same, but as they will both return true for the same available mana, there is no point in removing them from the array.
-    mana_cost = getCastingCosts(manaCostArray);
+    mana_cost = processHybridMana(mana_cost);
   }
 
   let hasRequiredMana;
