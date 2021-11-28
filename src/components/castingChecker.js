@@ -1,5 +1,5 @@
-import khmFilter from './setFilters/khm';
-import convertManaCostToCmc from './cmcConverter';
+import khmFilter from './setFilters/khm.js';
+import convertManaCostToCmc from './cmcConverter.js';
 
 // This function checks the mana cost of a card against the available mana entered by the user and returns true if the card can be cast with the available mana and false if it cannot.
 
@@ -43,7 +43,14 @@ export const processHybridMana = (cost) => {
   });
 
   const getCastingCosts = (arr) => {
-    return arr.reduce((a, b) => a.flatMap((d) => b.map((e) => [d, e].flat())));
+    if (arr.length === 1) {
+      // For a single pip, can't run the reduce function, as there is only one array (for the function arr.reduce((a,b) => ...) b is undefined)
+      return [[arr[0][0]], [arr[0][1]]];
+    } else {
+      return arr.reduce((a, b) =>
+        a.flatMap((d) => b.map((e) => [d, e].flat()))
+      );
+    }
   };
 
   return getCastingCosts(manaCostArray);
@@ -81,47 +88,41 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     JSON.parse(JSON.stringify(mana))
   ).sort((a, b) => a[1].colors.length - b[1].colors.length);
 
-  if (typeof mana_cost === 'string') {
+  if (mana_cost.every((value) => typeof value === 'string')) {
     // For any non-hybrid mana cost
-    const requiredMana = findRequiredMana(
-      mana_cost.replace(/[^a-z]/gi, '').split('')
-    );
 
-    const requiredManaArray = Object.entries(requiredMana);
+    const requiredMana = findRequiredMana(mana_cost);
 
-    requiredManaArray.forEach((color) => {
+    for (let color in requiredMana) {
       sortedByColorsProduced.forEach((manaSource) => {
         // color[1] is the value for the current required mana color
         // manaSource[1].colors is the array of colors the current source produces
 
-        if (manaSource[1].value === 0 || color[1] === 0) return; // ends loop if the source has no mana available, or if the required color has been fulfilled.
+        if (manaSource[1].value === 0 || color === 0) return; // ends loop if the source has no mana available, or if the required color has been fulfilled.
 
         // color[0] is the color (W, U, B, R, or G)
         // manaSource[1].value is the current amount of available mana for the current source
 
-        if (manaSource[1].colors.includes(color[0])) {
-          if (manaSource[1].value >= color[1]) {
-            manaSource[1].value -= color[1];
+        if (manaSource[1].colors.includes(color)) {
+          if (manaSource[1].value >= requiredMana[color]) {
+            manaSource[1].value -= requiredMana[color];
             if (manaSource[1].value < 0) {
               manaSource[1].value = 0;
             }
-            color[1] = 0;
+            requiredMana[color] = 0;
           } else {
-            color[1] -= manaSource[1].value;
-            if (color[1] < 0) {
-              color[1] = 0;
+            requiredMana[color] -= manaSource[1].value;
+            if (requiredMana[color] < 0) {
+              requiredMana[color] = 0;
             }
             manaSource[1].value = 0;
           }
         }
       });
-    });
+    }
 
     hasRequiredMana =
-      Object.values(Object.fromEntries(requiredManaArray)).reduce(
-        (a, b) => a + b,
-        0
-      ) === 0;
+      Object.values(requiredMana).reduce((a, b) => a + b, 0) === 0;
   } else {
     // For hybrid mana costs (which is an array of possible costs)
     const costsMet = [];

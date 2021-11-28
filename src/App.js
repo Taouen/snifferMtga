@@ -1,9 +1,9 @@
 import React from 'react';
-import CardsList from './components/CardsList';
-import SetSelector from './components/SetSelector';
+import CardsList from './components/CardsList.js';
+import SetSelector from './components/SetSelector.js';
 import { PulseLoader } from 'react-spinners';
-import ManaFilter from './components/ManaFilter';
-import SetControls from './components/SetControls';
+import ManaFilter from './components/ManaFilter.js';
+import SetControls from './components/SetControls.js';
 import * as scryfall from 'scryfall-client';
 
 class App extends React.Component {

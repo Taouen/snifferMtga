@@ -28,4 +28,5 @@ test('Process hybrid mana', () => {
     ['G', 'W'],
     ['G', 'U'],
   ]);
+  expect(processHybridMana(['U/R'])).toStrictEqual([['U'], ['R']]);
 });
