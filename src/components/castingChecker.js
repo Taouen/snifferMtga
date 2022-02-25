@@ -1,7 +1,60 @@
-import khmFilter from './setFilters/khm';
-import convertManaCostToCmc from './cmcConverter';
+import khmFilter from './setFilters/khm.js';
+import convertManaCostToCmc from './cmcConverter.js';
 
 // This function checks the mana cost of a card against the available mana entered by the user and returns true if the card can be cast with the available mana and false if it cannot.
+
+// return an object with the quantities of each color of mana required for the card (ie. mana_cost === 3RR returns {r:2})
+export const findRequiredMana = (array) => {
+  return array.reduce((color, quantity) => {
+    color[quantity] = color[quantity] ? color[quantity] + 1 : 1;
+    return color;
+  }, {});
+};
+
+export const processManaCost = (cost) => {
+  // Remove generic costs from the mana cost, and return colored pips as an array
+  // ex: '{X}{1}{U}{U}' becomes ['U', 'U']
+  // ex: '{2}{R/G}{R/G}' becomes ['R/G', 'R/G']
+  const pipsArray = cost
+    .replace(/[^a-wy-z/{}]/gi, '')
+    .replace(/}{/gi, '} {')
+    .replace(/[{}]/gi, '')
+    .split(' ');
+
+  return pipsArray.filter((item) => item !== '');
+};
+
+export const processHybridMana = (cost) => {
+  const manaCostArray = [];
+  cost.forEach((manaSymbol) => {
+    // Returns an array of possible casting costs (ie. {U/R}{U/R} returns as [[U,U], [U/R], [R/U], [R/R]]). U/R and R/U are functionally the same, but as they will both return true for the same available mana, there is no point in removing them from the array.
+
+    const tempArray = [];
+
+    manaSymbol.split('').forEach((character) => {
+      // Split each hybrid mana symbol into an array of possible colored mana (ie. {U/B} creates [U,B]), and push it to the manaCostArray
+      if (character === '/') {
+        return;
+      } else {
+        tempArray.push(character);
+      }
+    });
+    manaCostArray.push(tempArray);
+  });
+
+  const getCastingCosts = (arr) => {
+    if (arr.length === 1) {
+      // For a single pip, can't run the reduce function, as there is only one array (for the function arr.reduce((a,b) => ...) b is undefined)
+      return [[arr[0][0]], [arr[0][1]]];
+    } else {
+      return arr.reduce((a, b) =>
+        a.flatMap((d) => b.map((e) => [d, e].flat()))
+      );
+    }
+  };
+
+  return getCastingCosts(manaCostArray);
+};
 
 export default function canBeCast(card, mana, totalMana, setControls) {
   const { card_faces } = card;
@@ -17,60 +70,15 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     } else {
       mana_cost = card_faces[1].mana_cost;
     }
-    cmc = mana_cost.replace(/[^0-9a-w][^yz]/gi, '').split('').length; // card face objects dont contain their own cmc properties. (stripping out X from the cost also, as x is treated as 0)
+    cmc = mana_cost.replace(/[^0-9a-wy-z]/gi, '').split('').length; // creating cmc from mana_cost because card face objects dont have their own cmc properties. (stripping out X from the cost also, as x is treated as 0)
   }
 
-  // Remove all but colored pips from the mana cost (also strips X out of the cost)
-  const pipsArray = mana_cost.replace(/[^a-w/{}][^yz]/gi, '').split('{}');
-
-  // strip the numbered symbols from the mana_cost
-  pipsArray.forEach((item) => {
-    if (item === '') {
-      pipsArray.splice(pipsArray.indexOf(item), 1);
-    }
-  });
-
-  mana_cost = pipsArray.join('');
+  mana_cost = processManaCost(mana_cost);
 
   // For mana costs with Hybrid mana
-  if (mana_cost.includes('/')) {
-    // split mana_cost into an array of each separate mana symbol
-    const splitManaCost = mana_cost.split('}{');
-
-    const manaCostArray = [];
-    splitManaCost.forEach((manaSymbol) => {
-      // Split each mana symbol into an array of possible colored mana (ie. {U/B} creates [U,B]), and push it to the manaCostArray
-
-      const tempArray = [];
-      const fixedManaSymbol = manaSymbol.replace(/[^a-z/]/gi, ''); // strip {} out of each item
-
-      fixedManaSymbol.split('').forEach((character) => {
-        if (character === '/') {
-          return;
-        } else {
-          tempArray.push(character);
-        }
-      });
-      manaCostArray.push(tempArray);
-    });
-
-    const getCastingCosts = (arr) => {
-      return arr.reduce((a, b) =>
-        a.flatMap((d) => b.map((e) => [d, e].flat()))
-      );
-    };
-
-    // Set mana_cost equal to an array of possible casting costs (ie. {U/R}{U/R} returns as [[U,U], [U/R], [R/U], [R/R]]). U/R and R/U are functionally the same, but as they will both return true for the same available mana, there is no point in removing them from the array.
-    mana_cost = getCastingCosts(manaCostArray);
+  if (mana_cost.some((value) => value.includes('/'))) {
+    mana_cost = processHybridMana(mana_cost);
   }
-
-  // return an object with the quantities of each color of mana required for the card (ie. mana_cost === 3RR returns {r:2})
-  const findRequiredMana = (array) => {
-    return array.reduce((color, quantity) => {
-      color[quantity] = color[quantity] ? color[quantity] + 1 : 1;
-      return color;
-    }, {});
-  };
 
   let hasRequiredMana;
 
@@ -80,47 +88,41 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     JSON.parse(JSON.stringify(mana))
   ).sort((a, b) => a[1].colors.length - b[1].colors.length);
 
-  if (typeof mana_cost === 'string') {
+  if (mana_cost.every((value) => typeof value === 'string')) {
     // For any non-hybrid mana cost
-    const requiredMana = findRequiredMana(
-      mana_cost.replace(/[^a-z]/gi, '').split('')
-    );
 
-    const requiredManaArray = Object.entries(requiredMana);
+    const requiredMana = findRequiredMana(mana_cost);
 
-    requiredManaArray.forEach((color) => {
+    for (let color in requiredMana) {
       sortedByColorsProduced.forEach((manaSource) => {
         // color[1] is the value for the current required mana color
         // manaSource[1].colors is the array of colors the current source produces
 
-        if (manaSource[1].value === 0 || color[1] === 0) return; // ends loop if the source has no mana available, or if the required color has been fulfilled.
+        if (manaSource[1].value === 0 || color === 0) return; // ends loop if the source has no mana available, or if the required color has been fulfilled.
 
         // color[0] is the color (W, U, B, R, or G)
         // manaSource[1].value is the current amount of available mana for the current source
 
-        if (manaSource[1].colors.includes(color[0])) {
-          if (manaSource[1].value >= color[1]) {
-            manaSource[1].value -= color[1];
+        if (manaSource[1].colors.includes(color)) {
+          if (manaSource[1].value >= requiredMana[color]) {
+            manaSource[1].value -= requiredMana[color];
             if (manaSource[1].value < 0) {
               manaSource[1].value = 0;
             }
-            color[1] = 0;
+            requiredMana[color] = 0;
           } else {
-            color[1] -= manaSource[1].value;
-            if (color[1] < 0) {
-              color[1] = 0;
+            requiredMana[color] -= manaSource[1].value;
+            if (requiredMana[color] < 0) {
+              requiredMana[color] = 0;
             }
             manaSource[1].value = 0;
           }
         }
       });
-    });
+    }
 
     hasRequiredMana =
-      Object.values(Object.fromEntries(requiredManaArray)).reduce(
-        (a, b) => a + b,
-        0
-      ) === 0;
+      Object.values(requiredMana).reduce((a, b) => a + b, 0) === 0;
   } else {
     // For hybrid mana costs (which is an array of possible costs)
     const costsMet = [];
