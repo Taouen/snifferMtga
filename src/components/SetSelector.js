@@ -4,7 +4,7 @@ export default function SetSelector(props) {
   // manually entering sets for now. Might attempt later on to fetch sets from a selected format
   const [sets] = useState([
     { code: 'bro', name: "The Brothers' War" },
-    { code: 'ydmu', name: 'Dominaria United Alchemy' },
+    { code: 'ydmu', name: 'Alchemy: Dominaria United' },
     { code: 'dmu', name: 'Dominaria United' },
     { code: 'hbg', name: "Alchemy Horizons: Baldur's Gate" },
     { code: 'snc', name: 'Streets of New Capenna' },

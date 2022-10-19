@@ -32,11 +32,16 @@ class App extends React.Component {
     let tempCardArray;
 
     const set = await scryfall.getSet(setCode);
+    console.log(set);
 
     if (set.parent_set_code) {
       tempCardArray = await scryfall
         .search(
-          `set:${set.parent_set_code} (t:instant or keyword:flash) lang=en order:set is:nonfoil is:booster`
+          `set:${
+            set.parent_set_code
+          } (t:instant or keyword:flash) lang=en order:set is:nonfoil ${
+            !set.set_type === 'alchemy' ? 'is:booster' : ''
+          }`
         )
         .then((list) => list)
         .catch((err) => {
@@ -46,7 +51,9 @@ class App extends React.Component {
 
       const setCards = await scryfall
         .search(
-          `set:${setCode} (t:instant or keyword:flash) lang=en order:set is:nonfoil `
+          `set:${setCode} (t:instant or keyword:flash) lang=en order:set is:nonfoil ${
+            !set.set_type === 'alchemy' ? 'is:booster' : ''
+          }`
         )
         .then((list) => list)
         .catch((err) => {
@@ -58,7 +65,9 @@ class App extends React.Component {
     } else {
       cards = await scryfall
         .search(
-          `set:${setCode} (t:instant or keyword:flash) lang=en order:set is:nonfoil is:booster`
+          `set:${setCode} (t:instant or keyword:flash) lang=en order:set is:nonfoil ${
+            !set.set_type === 'alchemy' ? 'is:booster' : ''
+          }`
         )
         .then((list) => list)
         .catch((err) => {
