@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 export default function SetSelector(props) {
   // manually entering sets for now. Might attempt later on to fetch sets from a selected format
   const [sets] = useState([
-    { code: 'mom', name: 'March of the Machine' },
+    { code: 'mul', name: 'March of the Machine' }, // Code is MUL because the bonus sheet of legendary creatures is a child set of MOM
     { code: 'sir', name: 'Shadows Remastered' },
     { code: 'one', name: 'Phyrexia: All Will Be One' },
     { code: 'bro', name: "The Brothers' War" },

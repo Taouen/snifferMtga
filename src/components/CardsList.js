@@ -17,7 +17,8 @@ export default function CardsList({ cards, mana, totalMana, setControls }) {
       card_faces.forEach((face) => {
         if (
           face.type_line.includes('Instant') ||
-          (face.keywords && face.keywords.includes('Flash'))
+          // (face.keywords && face.keywords.includes('Flash')) It appears as of SIR scryfall changed how they structure the data for double faced cards. Face objects no longer contain the keywords, they exist only on the card object. Updated to check for the existence of flash in the oracle text.
+          (face.oracle_text && face.oracle_text.toLowerCase().includes('flash'))
         ) {
           image_uri = face.image_uris.normal;
         }

@@ -9,7 +9,7 @@ import * as scryfall from 'scryfall-client';
 class App extends React.Component {
   state = {
     cards: [],
-    currentSet: 'mom',
+    currentSet: 'mul',
     error: false,
     loading: true,
     mana: {
@@ -32,7 +32,6 @@ class App extends React.Component {
     let tempCardArray;
 
     const set = await scryfall.getSet(setCode);
-    console.log(set);
 
     if (set.parent_set_code) {
       tempCardArray = await scryfall

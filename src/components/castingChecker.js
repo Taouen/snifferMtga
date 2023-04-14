@@ -64,13 +64,16 @@ export default function canBeCast(card, mana, totalMana, setControls) {
   if (card_faces.length > 1) {
     if (
       card_faces[0].type_line.includes('Instant') ||
-      (card_faces[0].keywords && card_faces[0].keywords.includes('Flash'))
+      //  (card_faces[0].keywords && card_faces[0].keywords.includes(flash)) It appears as of SIR scryfall changed how they structure the data for double faced cards. Face objects no longer contain the keywords, they exist only on the card object. Updated to check for the existence of flash in the oracle text.
+      (card_faces[0].oracle_text &&
+        card_faces[0].oracle_text.toLowerCase().includes('flash'))
     ) {
       mana_cost = card_faces[0].mana_cost;
     } else {
       mana_cost = card_faces[1].mana_cost;
     }
-    cmc = mana_cost.replace(/[^0-9a-wy-z]/gi, '').split('').length; // creating cmc from mana_cost because card face objects dont have their own cmc properties. (stripping out X from the cost also, as x is treated as 0)
+    cmc = convertManaCostToCmc(mana_cost); // mana_cost.replace(/[^0-9a-wy-z]/gi, '').split('').length; This was simply counting the length, not taking into account any generic mana numbers. Not sure how I missed this for so long. Now applies correct number for CMC.
+    // creating cmc from mana_cost because card face objects dont have their own cmc properties. (stripping out X from the cost also, as x is treated as 0)
   }
 
   mana_cost = processManaCost(mana_cost);
