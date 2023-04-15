@@ -9,7 +9,7 @@ export default function SetControls({
     case 'khm':
       const { foretold } = setControls;
       return (
-        <div className="flex items-center">
+        <div className="flex items-center mt-2">
           <input
             className="mr-2"
             type="checkbox"
@@ -27,7 +27,7 @@ export default function SetControls({
     case 'grn':
       const { convoke } = setControls;
       return (
-        <div className="flex items-center">
+        <div className="flex items-center mt-2">
           <input
             className="mr-2"
             type="checkbox"
