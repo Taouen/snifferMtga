@@ -9,7 +9,7 @@ import * as scryfall from 'scryfall-client';
 class App extends React.Component {
   state = {
     cards: [],
-    currentSet: 'dmu',
+    currentSet: 'mul',
     error: false,
     loading: true,
     mana: {
@@ -36,7 +36,11 @@ class App extends React.Component {
     if (set.parent_set_code) {
       tempCardArray = await scryfall
         .search(
-          `set:${set.parent_set_code} (t:instant or keyword:flash) lang=en order:set is:nonfoil is:booster`
+          `set:${
+            set.parent_set_code
+          } (t:instant or keyword:flash) lang=en order:set is:nonfoil ${
+            !set.set_type === 'alchemy' ? 'is:booster' : ''
+          }`
         )
         .then((list) => list)
         .catch((err) => {
@@ -46,7 +50,9 @@ class App extends React.Component {
 
       const setCards = await scryfall
         .search(
-          `set:${setCode} (t:instant or keyword:flash) lang=en order:set is:nonfoil `
+          `set:${setCode} (t:instant or keyword:flash) lang=en order:set is:nonfoil ${
+            !set.set_type === 'alchemy' ? 'is:booster' : ''
+          }`
         )
         .then((list) => list)
         .catch((err) => {
@@ -58,7 +64,9 @@ class App extends React.Component {
     } else {
       cards = await scryfall
         .search(
-          `set:${setCode} (t:instant or keyword:flash) lang=en order:set is:nonfoil is:booster`
+          `set:${setCode} (t:instant or keyword:flash) lang=en order:set is:nonfoil ${
+            !set.set_type === 'alchemy' ? 'is:booster' : ''
+          }`
         )
         .then((list) => list)
         .catch((err) => {
