@@ -25,7 +25,7 @@ export default function SetSelector(props) {
     { code: 'm20', name: 'Core Set 2020' },
     { code: 'war', name: 'War of the Spark' },
     { code: 'rna', name: 'Ravnica Allegiance' },
-    { code: 'GRN', name: 'Guilds of Ravnica' },
+    { code: 'grn', name: 'Guilds of Ravnica' },
     { code: 'm19', name: 'Core Set 2019' },
   ]);
 
