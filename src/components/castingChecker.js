@@ -58,7 +58,7 @@ export const processHybridMana = (cost) => {
 
 export default function canBeCast(card, mana, totalMana, setControls) {
   const { card_faces } = card;
-  let { mana_cost, cmc } = card;
+  let { mana_cost, cmc, keywords } = card;
 
   // for double faced cards (or cards like Adventure cards from Throne of Eldraine), find which face is the instant speed one, and set mana_cost and cmc to the values for that face only.
   if (card_faces.length > 1) {
@@ -241,6 +241,7 @@ export default function canBeCast(card, mana, totalMana, setControls) {
     (cmc <= totalMana && hasRequiredMana) ||
     (setControls.foretold &&
       hasRequiredForetellMana &&
-      foretellCmc <= totalMana)
+      foretellCmc <= totalMana) ||
+    (setControls.convoke && keywords.includes('Convoke'))
   );
 }

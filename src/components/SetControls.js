@@ -15,6 +15,7 @@ export default function SetControls({
             type="checkbox"
             name="foretold"
             id="foretold"
+            checked={foretold}
             onChange={() => handleSetControlsChange('foretold', !foretold)}
           />
           <label className="text-base" htmlFor="foretold">
@@ -22,7 +23,24 @@ export default function SetControls({
           </label>
         </div>
       );
-
+    case 'mul':
+    case 'grn':
+      const { convoke } = setControls;
+      return (
+        <div className="flex items-center">
+          <input
+            className="mr-2"
+            type="checkbox"
+            name="convoke"
+            id="convoke"
+            checked={convoke}
+            onChange={() => handleSetControlsChange('convoke', !convoke)}
+          />
+          <label className="text-base" htmlFor="convoke">
+            Include Convoke Spells
+          </label>
+        </div>
+      );
     default:
       return null;
   }

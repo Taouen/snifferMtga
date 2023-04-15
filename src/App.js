@@ -23,6 +23,7 @@ class App extends React.Component {
     },
     setControls: {
       foretold: false,
+      convoke: false,
     },
     totalMana: 0,
   };
