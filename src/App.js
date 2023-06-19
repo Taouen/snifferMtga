@@ -81,7 +81,12 @@ class App extends React.Component {
   };
 
   componentDidMount = () => {
+    document.body.classList.add('dark:text-white', 'dark:bg-gray-800');
     this.getLocalSetData(this.state.currentSet);
+  };
+
+  componentWillUnmount = () => {
+    document.body.classList.remove('dark:text-white', 'dark:bg-grey-800');
   };
 
   getLocalSetData = (set) => {

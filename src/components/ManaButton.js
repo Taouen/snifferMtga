@@ -7,7 +7,13 @@ const ManaButton = ({ mana, color, handleManaChange, symbol }) => {
           onClick={() => handleManaChange(color, 1)}
           className="flex flex-col items-center text-2xl px-2"
         >
-          <span className={value > 0 ? 'text-black' : 'text-gray-200'}>
+          <span
+            className={
+              value > 0
+                ? 'text-black dark:text-white'
+                : 'text-gray-200 dark:text-gray-400'
+            }
+          >
             {value}
           </span>
           <div className="w-10 block">{symbol}</div>
@@ -16,7 +22,9 @@ const ManaButton = ({ mana, color, handleManaChange, symbol }) => {
       <div className="flex flex-row mt-4">
         <button
           className={`${
-            value > 0 ? 'text-gray-800' : 'text-gray-300'
+            value > 0
+              ? 'text-gray-800 dark:text-black'
+              : 'text-gray-300 dark:text-gray-400'
           } text-xs px-1.5 py-0.5 rounded bg-gray-100`}
           type="button"
           onClick={() => handleManaChange(color, -1)}

@@ -33,7 +33,7 @@ export default function ManaFilter({
       <div className="flex flex-row my-4 mx-1 justify-center items-center flex-wrap">
         <MulticolorMenu addMulticolorManaSource={addMulticolorManaSource} />
       </div>
-      <div className="flex flex-row">
+      <div className="flex flex-row dark:text-black">
         <button
           className={resetButtonClasses}
           type="reset"
