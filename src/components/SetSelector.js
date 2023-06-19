@@ -31,7 +31,7 @@ export default function SetSelector(props) {
 
   return (
     <select
-      className="text-base w-9/12 max-w-xs h-8 border border-gray-400 rounded mt-4 text-center"
+      className="text-base w-9/12 max-w-xs h-8 border border-gray-400 rounded mt-4 text-center dark:text-black"
       id="set"
       value={props.currentSet}
       onChange={props.handleSetChange}
