@@ -6,6 +6,7 @@ const ManaButton = ({ mana, color, handleManaChange, symbol }) => {
         <button
           onClick={() => handleManaChange(color, 1)}
           className="flex flex-col items-center text-2xl px-2"
+          aria-label={color}
         >
           <span
             className={
