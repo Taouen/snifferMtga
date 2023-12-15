@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 export default function SetSelector(props) {
   // manually entering sets for now. Might attempt later on to fetch sets from a selected format
   const [sets] = useState([
+    { code: 'ktk', name: 'Khans of Tarkir'},
     { code: 'lci', name: 'Lost Caverns of Ixalan' },
     { code: 'woe', name: 'Wilds of Eldraine' },
     { code: 'ltr', name: 'Lord of the Rings: Battle for Middle Earth' },
