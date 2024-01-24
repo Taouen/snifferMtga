@@ -2,7 +2,8 @@
 
 export default function convertManaCostToCmc(cost) {
   // removes the brackets and splits into an array
-  const manaCostArray = cost.replace(/[^0-9a-z]/gi, '').split('');
+
+  const manaCostArray = cost.replace(/[^0-9a-z{}]/gi, '').split('}{'); // includes brackets so as to split properly. Found that splitting on '' was breaking with Hybrid mana (ex. {U/R} would return as CMC 2 because the U and R would both be put in as separate elements.)
   const cmc = [];
 
   manaCostArray.forEach((item) => {
