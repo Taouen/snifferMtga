@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 export default function SetSelector(props) {
   // manually entering sets for now. Might attempt later on to fetch sets from a selected format
   const [sets] = useState([
+    {code: 'blb', name: 'Bloomburrow'},
+    {code: 'mh3', name: 'Modern Horizons 3'},
     {code: 'otj', name: 'Outlaws of Thunder Junction'},
     { code: 'mkm', name: 'Murders at Karlov Manor' },
     { code: 'ktk', name: 'Khans of Tarkir'},
