@@ -9,7 +9,7 @@ import * as scryfall from 'scryfall-client';
 class App extends React.Component {
   state = {
     cards: [],
-    currentSet: 'otj',
+    currentSet: 'dsk',
     error: false,
     loading: true,
     mana: {
