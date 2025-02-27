@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 export default function SetSelector(props) {
   // manually entering sets for now. Might attempt later on to fetch sets from a selected format
   const [sets] = useState([
+    {code: 'dft', name: 'Aetherdrift'},
     { code: 'fdn', name: 'Foundations' },
     { code: 'dsk', name: 'Duskmourn' },
     { code: 'blb', name: 'Bloomburrow' },
