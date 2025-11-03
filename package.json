@@ -3,23 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@szhsin/react-menu": "^4.3.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "classnames": "^2.3.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-planet": "^1.0.1",
-    "react-scripts": "^4.0.3",
-    "react-spinners": "^0.10.6",
-    "scryfall-client": "^0.18.6",
-    "web-vitals": "^0.2.4"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-spinners": "^0.15.0",
+    "scryfall-client": "^0.24.7",
+    "webpack": "^5.98"
   },
   "scripts": {
-    "start": "npm run watch:css && react-scripts start",
-    "build": "npm run watch:css && react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "watch:css": "postcss src/styles/tailwind.css -o src/styles/main.css"
   },
   "eslintConfig": {
@@ -41,8 +39,11 @@
     ]
   },
   "devDependencies": {
+    "@babel/plugin-transform-private-property-in-object": "7.25.9",
+    "@vitejs/plugin-react": "^4.3.4",
     "postcss": "^8.3.6",
     "postcss-cli": "^8.3.1",
-    "tailwindcss": "^2.2.15"
+    "tailwindcss": "^2.2.15",
+    "vite": "^6.2.2"
   }
 }
