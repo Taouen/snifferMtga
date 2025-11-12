@@ -15,7 +15,7 @@
     "webpack": "^5.98"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview",
     "watch:css": "postcss src/styles/tailwind.css -o src/styles/main.css"
