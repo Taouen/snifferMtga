@@ -6,10 +6,13 @@ import ManaFilter from './components/ManaFilter.jsx';
 import SetControls from './components/SetControls.jsx';
 import scryfall from 'scryfall-client';
 
+// Need to set a user agent in order for reqeusts in Safari to work. Safari sends a blank user agent, which causes Scryfall to block the preflight request.
+scryfall.setUserAgent('MTGAHandSniffer/1.0');
+
 class App extends React.Component {
   state = {
     cards: [],
-    currentSet: 'spm',
+    currentSet: 'om1',
     error: false,
     loading: true,
     mana: {
@@ -36,9 +39,9 @@ class App extends React.Component {
       .getSet(setCode)
       .then((set) => set)
       .catch((err) => {
-          console.error(err);
-          this.setState({ error: true, loading: false });
-        });
+        console.error(err);
+        this.setState({ error: true, loading: false });
+      });
 
     if (set.parent_set_code) {
       tempCardArray = await scryfall
@@ -110,7 +113,7 @@ class App extends React.Component {
 
   handleSetChange = (event) => {
     const currentSet = event.target.value;
-    this.setState({ loading: true });
+    this.setState({ loading: true, error: false });
     this.getLocalSetData(currentSet);
     this.setState({ currentSet });
   };
@@ -175,33 +178,33 @@ class App extends React.Component {
         <header className="mt-4">
           <h1 className="text-2xl">MTGA Hand Sniffer</h1>
         </header>
-        {error ? (
+        {error && (
           <p>
             An error occurred while trying to fetch resources. Please refresh
             the page to try again.
           </p>
-        ) : (
-          <div className="flex flex-col items-center justify-between mb-4 text-lg">
-            <SetSelector
-              id="set"
-              currentSet={currentSet}
-              handleSetChange={this.handleSetChange}
-            />
-            <ManaFilter
-              mana={mana}
-              handleManaChange={this.handleManaChange}
-              clearMana={this.clearMana}
-              resetMana={this.resetMana}
-              handleMulticolorManaChange={this.handleMulticolorManaChange}
-              addMulticolorManaSource={this.addMulticolorManaSource}
-            />
-            <SetControls
-              currentSet={currentSet}
-              setControls={setControls}
-              handleSetControlsChange={this.handleSetControlsChange}
-            />
-          </div>
         )}
+        <div className="flex flex-col items-center justify-between mb-4 text-lg">
+          <SetSelector
+            id="set"
+            currentSet={currentSet}
+            handleSetChange={this.handleSetChange}
+          />
+          <ManaFilter
+            mana={mana}
+            handleManaChange={this.handleManaChange}
+            clearMana={this.clearMana}
+            resetMana={this.resetMana}
+            handleMulticolorManaChange={this.handleMulticolorManaChange}
+            addMulticolorManaSource={this.addMulticolorManaSource}
+          />
+          <SetControls
+            currentSet={currentSet}
+            setControls={setControls}
+            handleSetControlsChange={this.handleSetControlsChange}
+          />
+        </div>
+
         {loading ? (
           <PulseLoader loading={loading} color="#80b2e0" size="12" />
         ) : (
