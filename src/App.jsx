@@ -35,7 +35,10 @@ class App extends React.Component {
     const set = await scryfall
       .getSet(setCode)
       .then((set) => set)
-      .catch((err) => console.log(err));
+      .catch((err) => {
+          console.error(err);
+          this.setState({ error: true, loading: false });
+        });
 
     if (set.parent_set_code) {
       tempCardArray = await scryfall
