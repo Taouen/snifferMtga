@@ -12,7 +12,7 @@ scryfall.setUserAgent('MTGAHandSniffer/1.0');
 class App extends React.Component {
   state = {
     cards: [],
-    currentSet: 'om1',
+    currentSet: 'tla',
     error: false,
     loading: true,
     mana: {
