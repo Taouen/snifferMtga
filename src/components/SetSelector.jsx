@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 export default function SetSelector(props) {
   // manually entering sets for now. Might attempt later on to fetch sets from a selected format
   const [sets] = useState([
+    { code: 'ecl', name: 'Lorwyn Eclipsed' },
     { code: 'tla', name: 'Avatar: The Last Airbender' },
     { code: 'om1', name: "Marvel's Spiderman/Through the Omenpaths" },
     { code: 'eoe', name: 'Edge of Eternities' },
